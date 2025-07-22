@@ -175,6 +175,9 @@ export default {
           extra: dialog.additional,
           context: dialog.description,
           goals: goals,
+          game_id: gameId,
+          scene_id: sceneId,
+          script_id: dialog.id
         }
         submitData(dialogData, "generate", false)
           .then(

@@ -186,9 +186,8 @@ export default {
                 if(response.error){
                   throw response.error.data;
                 }
-                scenes[scenes.findIndex((gameId) => gameId.id === this.createScriptSceneId)].scripts.find((s) => s.id == dialog.id).result = response
+                this.$refs.graph.reloadGraph();
                 saveState();
-                
               },
           )
           .catch((error) => console.error('Ошибка:', error))

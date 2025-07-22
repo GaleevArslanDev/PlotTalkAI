@@ -23,6 +23,7 @@
     "jsdom": "^26.1.0",
     "prettier": "3.5.3",
     "vite": "^7.0.5",
+    "vite-plugin-node-polyfills": "^0.24.0",
     "vite-plugin-vue-devtools": "^7.7.7",
     "vitest": "^3.2.4"
   }

@@ -179,7 +179,7 @@ export default {
           scene_id: sceneId,
           script_id: dialog.id
         }
-        submitData(dialogData, "generate", false)
+        submitData(dialogData, "generate", true)
           .then(
             (response) =>
               {

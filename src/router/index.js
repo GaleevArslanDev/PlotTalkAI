@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 import EditGamePage from '@/components/EditGamePage.vue'
 import GamesPage from '@/components/Games/GamesPage.vue'
 import LoginPage from '@/components/LoginPage.vue'

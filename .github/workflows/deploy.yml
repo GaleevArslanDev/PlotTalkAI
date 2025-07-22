@@ -15,7 +15,7 @@ jobs:
           npm ci
           npm cache clean --force
       - run: npm ci
-      - run: npm run build
+      - run: npm run build -- --emptyOutDir
       - uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

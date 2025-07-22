@@ -20,5 +20,8 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  base: '/',
+  base: '/PlotTalkAI/',
+  build: {
+    assetsDir: 'assets', // Папка для ресурсов (опционально)
+  }
 })

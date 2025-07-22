@@ -553,8 +553,8 @@ function handleNodeRegenerate(vm) {
   if (editingNode.value) {
     saveHistorySnapshot();
     let regenerateData = {
-      data: scenario.data,
-      regenerate_node_id: editingNode.id,
+      dialog_structure: scenario.data,
+      node_id: editingNode.id,
       prompt: vm.$refs.regenerate.additionalPrompt
     } 
     scenario.value.data = [];

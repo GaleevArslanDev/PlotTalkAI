@@ -5,6 +5,7 @@
     <div class="scenario-description" placeholder="Краткое описание диалога">{{ scenario.description }}</div>
 
    <div class="button-group">
+    <div class="actions-header-buttons">
   <button class="btn" @click="undoLastAction" title="Отменить" v-if="!isLoading">
         <svg fill="#601f7e" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="none">
   <path d="M9,16 C9.85216986,16 10.2974338,15.0144864 9.78322518,14.3774732 L9.70710678,14.2928932 L7.41602684,12.0006549 C8.6852851,10.797551 10.6983085,10 13,10 C16.918278,10 20,12.3112915 20,15 C20,15.5522847 20.4477153,16 21,16 C21.5522847,16 22,15.5522847 22,15 C22,11.0612915 17.918278,8 13,8 C10.1933072,8 7.65904665,8.99693838 6.00030879,10.5849581 L3.70710678,8.29289322 C3.1045317,7.69031813 2.09281919,8.07233231 2.00598327,8.88636906 L2,9 L2,15 C2,15.5128358 2.38604019,15.9355072 2.88337887,15.9932723 L3,16 L9,16 Z"/>
@@ -16,6 +17,7 @@
   <path d="M9,16 C9.85216986,16 10.2974338,15.0144864 9.78322518,14.3774732 L9.70710678,14.2928932 L7.41602684,12.0006549 C8.6852851,10.797551 10.6983085,10 13,10 C16.918278,10 20,12.3112915 20,15 C20,15.5522847 20.4477153,16 21,16 C21.5522847,16 22,15.5522847 22,15 C22,11.0612915 17.918278,8 13,8 C10.1933072,8 7.65904665,8.99693838 6.00030879,10.5849581 L3.70710678,8.29289322 C3.1045317,7.69031813 2.09281919,8.07233231 2.00598327,8.88636906 L2,9 L2,15 C2,15.5128358 2.38604019,15.9355072 2.88337887,15.9932723 L3,16 L9,16 Z"></path>
 </svg>
 </button>
+</div>
   <button class="btn" @click="saveScript" v-if="!isLoading">Сохранить</button>
   <button 
         class="regenerate-btn btn"
@@ -1400,6 +1402,11 @@ defineExpose({
   font-size: 1.2rem;
 }
 
+.actions-header-buttons {
+  gap: 2vw;
+  display: flex;
+}
+
 .edge-textarea {
   width: 100%;
   min-height: 100px;
@@ -1485,18 +1492,24 @@ defineExpose({
 }
 
 .button-group {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  grid-row: auto;
   align-items: center;
-  gap: 10vw;
-  justify-content: center;
+  grid-gap: 10vw;
+  justify-content: space-between;
   margin-bottom: 3vh; 
 }
 
 @media (max-width: 750px) {
   .button-group {
-    flex-direction: column;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: 100%;
     align-items: start;
     gap: 1vh
+  }
+  .button-group .btn {
+    width: 100%;
   }
 }
 </style>

@@ -39,8 +39,9 @@ export default {
     },
     download(id) {
       const game = state.games.find((g) => g.id == state.selectedGameId)
-      const scripts = game.scenes.find((s) => s.id == id).scripts
-      const res = []
+      const scene = game.scenes.find((s) => s.id == id);
+      const scripts = scene.scripts;
+      const res = [];
 
       scripts.forEach((element) => {
         if (Object.keys(element.result).length > 0) {
@@ -48,6 +49,7 @@ export default {
             data: element.result.data,
             npc_name: game.characters.find((c) => c.id == element.npc)?.name || '',
             hero_name: game.characters.find((c) => c.id == element.main_character)?.name || '',
+            scene_name: scene?.name || ''
           })
         }
       })

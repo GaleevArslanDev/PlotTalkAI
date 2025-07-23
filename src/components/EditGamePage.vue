@@ -136,10 +136,10 @@ export default {
           scene.scripts.push(dialog)
         }
         else {
-          scene.scripts[scene.scripts.findIndex(s => s.id == this.scriptToEdit.id)] = dialog;
           saveState();
           if (!this.regenerate)
             return;
+          scene.scripts[scene.scripts.findIndex(s => s.id == this.scriptToEdit.id)] = dialog;
         }
 
         let goals = []

@@ -68,7 +68,7 @@ export default {
             notifications.notify('User logged in')
             sessionStorage.setItem("token", response.access_token);
             sessionStorage.setItem("user", JSON.stringify(response.user));
-            fetchData('users/me/data', true).then(response => {
+            load().then(response => {
               Object.assign(state, response)
               this.$router.push('/')
             })

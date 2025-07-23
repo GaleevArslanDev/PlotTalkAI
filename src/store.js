@@ -16,8 +16,8 @@ const defaultState = {
   },
 }
 
-function load() {
-  let res = fetchData(`users/me/data`, true)
+async function load() {
+  let res = await fetchData(`users/me/data`, true);
   return res
 }
 

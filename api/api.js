@@ -128,6 +128,7 @@ export const logout = async () => {
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('user')
     Object.assign(state, {})
+    console.log(state)
     return { success: true }
   } catch (error) {
     return handleError(error)

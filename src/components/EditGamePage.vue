@@ -113,6 +113,7 @@ export default {
         let sceneId = this.createScriptSceneId
         let game = state.games[state.games.findIndex((game) => game.id === this.createScriptGameId)]
         let scenes = game.scenes
+        let scene = scenes[scenes.findIndex((gameId) => gameId.id == this.createScriptSceneId)]
         let dialog = {
           id: this.scriptEdit === "false" ? Date.now().toString() : this.scriptToEdit.id,
           name: child.name,
@@ -128,18 +129,17 @@ export default {
           itemData: child.itemData,
           infoData: child.infoData,
           additional: child.additional,
-          result: {},
+          result: this.regenerate?{}:scene.scripts.find(s => s.id == this.scriptToEdit.id).result,
         }
-        let scene = scenes[scenes.findIndex((gameId) => gameId.id == this.createScriptSceneId)]
         this.setCreateScriptModalState(false)
         if (this.scriptEdit === "false"){
           scene.scripts.push(dialog)
         }
         else {
+          scene.scripts[scene.scripts.findIndex(s => s.id == this.scriptToEdit.id)] = dialog;
           saveState();
           if (!this.regenerate)
             return;
-          scene.scripts[scene.scripts.findIndex(s => s.id == this.scriptToEdit.id)] = dialog;
         }
 
         let goals = []

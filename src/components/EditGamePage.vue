@@ -186,8 +186,6 @@ export default {
                 if(response.error){
                   throw response.error.data;
                 }
-                this.$refs.graph.reloadGraph();
-                saveState();
               },
           )
           .catch((error) => console.error('Ошибка:', error))

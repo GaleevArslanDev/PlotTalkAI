@@ -176,6 +176,7 @@ export default {
     window.speechSynthesis.addEventListener('voiceschanged', this.updateVoices)
     let user = JSON.parse(sessionStorage.getItem('user'));
     this.username = user.name + " " + user.surname;
+    console.log(state.games)
   },
   beforeUnmount() {
     window.speechSynthesis.removeEventListener('voiceschanged', this.updateVoices)

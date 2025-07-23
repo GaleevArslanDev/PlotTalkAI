@@ -23,7 +23,7 @@
 
 <script>
 import { submitData, fetchData } from '@/../api/api'
-import { load, saveState, setToken, state } from '@/store'
+import { load, saveState, setToken, state, resetState } from '@/store'
 import { toRaw } from 'vue'
 import logger from '@/logger'
 import notifications from '@/notifications'
@@ -37,6 +37,9 @@ export default {
       error: '',
       fieldsToValidate: ['mail', 'password']
     }
+  },
+  created(){
+    resetState()
   },
   methods: {
     validate() {

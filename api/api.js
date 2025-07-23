@@ -1,4 +1,4 @@
-import { state } from '@/store'
+import { state, resetState } from '@/store'
 import axios from 'axios'
 
 // Создаем экземпляр axios с базовыми настройками
@@ -127,8 +127,7 @@ export const logout = async () => {
     //await api.post('/logout')
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('user')
-    Object.assign(state, {})
-    console.log(state)
+    resetState();
     return { success: true }
   } catch (error) {
     return handleError(error)

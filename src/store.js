@@ -21,6 +21,10 @@ async function load() {
   return res
 }
 
+export function resetState() {
+  Object.assign(state, initialState)
+}
+
 const state = reactive({...defaultState})
 
 function saveState() {

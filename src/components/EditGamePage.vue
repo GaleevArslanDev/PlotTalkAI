@@ -175,17 +175,18 @@ export default {
           extra: dialog.additional,
           context: dialog.description,
           goals: goals,
+          game_id: gameId.toString(),
+          scene_id: sceneId.toString(),
+          script_id: dialog.id.toString()
         }
-        submitData(dialogData, "generate", false)
+        submitData(dialogData, "generate", true)
+        
           .then(
             (response) =>
               {
                 if(response.error){
                   throw response.error.data;
                 }
-                scenes[scenes.findIndex((gameId) => gameId.id === this.createScriptSceneId)].scripts.find((s) => s.id == dialog.id).result = response
-                saveState();
-                
               },
           )
           .catch((error) => console.error('Ошибка:', error))

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { submitData } from '@/../api/api'
+import { submitData, fetchData } from '@/../api/api'
 import { load, saveState, setToken, state } from '@/store'
 import { toRaw } from 'vue'
 import logger from '@/logger'
@@ -68,7 +68,10 @@ export default {
             notifications.notify('User logged in')
             sessionStorage.setItem("token", response.access_token);
             sessionStorage.setItem("user", JSON.stringify(response.user));
-            this.$router.push('/')
+            fetchData('users/me/data', true).then(response => {
+              Object.assign(state, response)
+              this.$router.push('/')
+            })
           }
         }
       })

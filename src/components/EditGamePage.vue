@@ -180,7 +180,6 @@ export default {
           script_id: dialog.id.toString()
         }
         submitData(dialogData, "generate", true)
-        
           .then(
             (response) =>
               {

@@ -127,7 +127,7 @@ export const logout = async () => {
     //await api.post('/logout')
     sessionStorage.removeItem('token')
     sessionStorage.removeItem('user')
-    state = {}
+    Object.assign(state, {})
     return { success: true }
   } catch (error) {
     return handleError(error)

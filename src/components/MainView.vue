@@ -40,7 +40,7 @@
     
 
     <div class="canvas" ref="canvasRef" @mousedown="startPan" @wheel="handleWheel">
-      <span v-if="isLoading"><i>Диалог еще генерируется<span class="dot-animation"><span>.</span><span>.</span><span>.</span></span></i></span>
+      <span v-if="isLoading" class="canvas-is-loading"><i>Диалог еще генерируется<span class="dot-animation"><span>.</span><span>.</span><span>.</span></span></i></span>
       <div v-else class="canvas-content" :style="{ 
           transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
           transformOrigin: '0 0'
@@ -1108,6 +1108,12 @@ defineExpose({
   color: #3b0764;
   box-sizing: border-box;
   user-select: none;
+}
+
+.canvas-is-loading {
+  align-self: center;
+  justify-self: center;
+  font-size: large;
 }
 
 .scenario-description,

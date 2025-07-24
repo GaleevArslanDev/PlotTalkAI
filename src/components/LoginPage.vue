@@ -51,33 +51,42 @@ export default {
       }
       return true;
     },
-    submit() {
+    async submit() {
       if (!this.validate()) return;
       else this.error = "";
 
       let loginData = {
         "mail": this.mail,
         "password": this.password,
-      } 
-      submitData(loginData, "login", true).then(response => {
-        if(response.data){
+      }
+      
+      try {
+        const response = await submitData(loginData, "login", true);
+        
+        if (response.data?.detail) {
           this.error = response.data.detail;
-          logger.add('Login failed')
-          notifications.notify('Login failed')
+          logger.add('Login failed');
+          notifications.notify('Login failed');
+          return;
         }
-        else{
-          if (response) {
-            logger.add('User logged in')
-            notifications.notify('User logged in')
-            sessionStorage.setItem("token", response.access_token);
-            sessionStorage.setItem("user", JSON.stringify(response.user));
-            load().then(response => {
-              Object.assign(state, response)
-              this.$router.push('/')
-            })
-          }
+
+        if (response) {
+          logger.add('User logged in');
+          notifications.notify('User logged in');
+          
+          sessionStorage.setItem("token", response.access_token);
+          sessionStorage.setItem("user", JSON.stringify(response.user));
+          
+          await load();
+          
+          this.$router.replace('/').then(() => {
+            window.location.reload();
+          });
         }
-      })
+      } catch (error) {
+        this.error = 'Ошибка соединения';
+        console.error('Login error:', error);
+      }
     }
   }
 }

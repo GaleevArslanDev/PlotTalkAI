@@ -23,16 +23,6 @@
 
         <div class="right-column">
           <div>
-            <label>Тип персонажа</label>
-            <select v-model="type" required class="input">
-              <option disabled value="">Выберите тип</option>
-              <option value="npc">NPC</option>
-              <option value="main">Главный персонаж</option>
-            </select>
-        <span class="error-label" v-if="this.errors.type">Это поле обязательно для заполнения</span>
-          </div>
-
-          <div>
             <label>Характер</label>
             <input type="text" v-model="mood" required class="input" />
         <span class="error-label" v-if="this.errors.mood">Это поле обязательно для заполнения</span>
@@ -68,11 +58,11 @@ export default {
       name: this.char?.name,
       job: this.char?.profession,
       description: this.char?.extra,
-      type: this.edit ? this.char?.type : "",
+      type: "",
       mood: this.char?.traits,
       speechStyle: this.char?.talk_style,
       appearance: this.char?.look,
-      fieldsToValidate: ['name', 'job', 'description', 'type', 'mood', 'speechStyle', 'appearance'],
+      fieldsToValidate: ['name', 'job', 'description', 'mood', 'speechStyle', 'appearance'],
       errors: {}
     };
   },

@@ -40,7 +40,7 @@
     
 
     <div class="canvas" ref="canvasRef" @mousedown="startPan" @wheel="handleWheel">
-      <span v-if="isLoading"><i>Диалог еще генерируется. Не закрывайте приложение и не открывайте другие страницы!</i></span>
+      <span v-if="isLoading"><i>Диалог еще генерируется<span class="dot-animation"><span>.</span><span>.</span><span>.</span></span></i></span>
       <div v-else class="canvas-content" :style="{ 
           transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
           transformOrigin: '0 0'
@@ -207,7 +207,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
-import { state, saveState } from '@/store'
+import { state, saveState, load } from '@/store'
 import notifications from '@/notifications'
 import { mount } from '@vue/test-utils'
 import { useRoute, useRouter } from 'vue-router'
@@ -649,7 +649,9 @@ function endPan() {
   window.removeEventListener('mouseup', endPan)
 }
 
-function reloadGraph() {
+async function reloadGraph() {
+  let nd = await load();
+  Object.assign(state, nd); 
   const game = state.games.find(g => g.id === route.params.id);
   if (game) {
     const scene = game.scenes.find(s => s.id === state.selectedSceneId);

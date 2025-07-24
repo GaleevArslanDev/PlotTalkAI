@@ -179,6 +179,7 @@ export default {
           scene_id: sceneId.toString(),
           script_id: dialog.id.toString()
         }
+        this.$refs.graph.reloadGraph();
         submitData(dialogData, "generate", true)
           .then(
             (response) =>

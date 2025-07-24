@@ -176,4 +176,31 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.dot-animation {
+  display: inline-block; /* Чтобы точки были в одной строке */
+}
+
+.dot-animation span {
+  opacity: 0; /* Начальная прозрачность */
+  animation: blink 1s infinite; /* Применяем анимацию */
+  animation-delay: 0s; /* Задержка для каждой точки */
+}
+
+.dot-animation span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dot-animation span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
 </style>

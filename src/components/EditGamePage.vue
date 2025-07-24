@@ -129,7 +129,7 @@ export default {
           itemData: child.itemData,
           infoData: child.infoData,
           additional: child.additional,
-          result: this.regenerate?{}:scene.scripts.find(s => s.id == this.scriptToEdit.id).result,
+          result: !this.regenerate?{}:scene.scripts.find(s => s.id == this.scriptToEdit.id).result,
         }
         this.setCreateScriptModalState(false)
         if (this.scriptEdit === "false"){

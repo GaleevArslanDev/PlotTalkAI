@@ -1111,9 +1111,8 @@ defineExpose({
 }
 
 .canvas-is-loading {
-  align-self: center;
-  justify-self: center;
-  font-size: large;
+  margin-top: 10vh;
+  font-size: x-large;
 }
 
 .scenario-description,

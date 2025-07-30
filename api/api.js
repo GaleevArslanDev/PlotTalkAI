@@ -3,7 +3,7 @@ import axios from 'axios'
 
 // Создаем экземпляр axios с базовыми настройками
 const api = axios.create({
-  baseURL: 'https://screenwriter-backend-hy5a.onrender.com/api/',
+  baseURL: 'https://plottalkai-backend.onrender.com/api',
   headers: {
     'Content-Type': 'application/json',
   },

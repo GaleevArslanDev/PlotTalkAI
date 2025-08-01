@@ -4,7 +4,7 @@ import Scrollview from '@/components/Scrollview.vue'
 import { state } from './../store'
 
 export default {
-  name: 'CreateScriptModal',
+  name: 'CreateSceneModal',
   components: { Scrollview, CharacterItem },
   props: {
     sceneData: { type: Object, default: null },
@@ -78,6 +78,10 @@ export default {
         this.errors[field] = false
       }
     },
+    editCharacters() {
+      console.log(state.selectedGameId);
+      this.$emit("editCharacters", state.games.find(g => g.id === state.selectedGameId))
+    }
   },
 }
 </script>
@@ -103,7 +107,8 @@ export default {
       >
     </div>
     <div class="create-scene-modal-cell create-scene-modal-characters">
-      <h2 class="create-scene-modal-h2">Персонажи</h2>
+      <h2 class="create-scene-modal-h2">Персонажи <button class="btn" type="button" @click="editCharacters">Изменить</button></h2>
+      
     <Scrollview :w="'100%'" :h="'200px'" :class="{ error: errors.characters }">
       <ul class="characters-list">
         <li v-for="char of charactersList" :key="char.id" class="character-checkbox">

@@ -101,18 +101,6 @@
       @delete="deleteGame"
       ref="createGame"
     />
-
-    <CharactersModal
-      :visible="isCharsModalVisible && !isCharEditModalOpened"
-      :characters="selectedGameCharacters"
-      @close="isCharsModalVisible = false"
-      @save="onSaveCharacters"
-      @add="addChar"
-      @edit="editCharF"
-      ref="charsModal"
-    />
-
-    <ModalWindow  v-if="isCharEditModalOpened" @closeModal="isCharEditModalOpened = false" :showButtons="true" :header="'Персонаж'" @validate-request="save"><CreateCharacterModal :edit="editChar" :char="selectedGame.characters.find(c => c.id == editChar)" ref="createChar"/></ModalWindow>
   </div>
 </template>
 
@@ -125,26 +113,20 @@ import { fetchData, logout } from '../../../api/api'
 import GameItem from '@/components/Games/GameItem.vue'
 import CreateGameModal from '@/components/Games/CreateGameModal.vue'
 import { state, saveState } from '@/store'
-import CharactersModal from '../CharacterViewModal.vue'
 import ModalWindow from '../ModalWindow.vue'
-import CreateCharacterModal from '../CreateCharacterModal.vue'
 let r = useRouter();
 export default {
-  components: { GameItem, CreateGameModal, CharactersModal, ModalWindow, CreateCharacterModal },
+  components: { GameItem, CreateGameModal, ModalWindow },
   data() {
     return {
       showCreateModal: false,
       editingGame: null,
-      isCharsModalVisible: false,
       showSettings: false,
       darkTheme: false,
       language: 'ru',
       voices: [],
       selectedVoiceName: '',
-      selectedGame: null,
       selectedGameCharacters: [],
-      isCharEditModalOpened: false,
-      editChar: "",
       showUserMenu: false,
       username: ''
     }
@@ -176,26 +158,20 @@ export default {
     window.speechSynthesis.addEventListener('voiceschanged', this.updateVoices)
     let user = JSON.parse(sessionStorage.getItem('user'));
     this.username = user.name + " " + user.surname;
-    console.log(state.games)
   },
   beforeUnmount() {
     window.speechSynthesis.removeEventListener('voiceschanged', this.updateVoices)
   },
   methods: {
+    openCharacters(game) {
+      this.$parent.$parent.openCharacters(game)
+    },
     updateVoices() {
       this.voices = window.speechSynthesis.getVoices()
       if (!this.selectedVoiceName && this.voices.length) {
         const def = this.voices.find((v) => v.default) || this.voices[0]
         this.selectedVoiceName = def?.name || ''
       }
-    },
-    addChar() {
-      this.isCharEditModalOpened = true;
-      this.editChar = "";
-    },
-    editCharF(id) {
-      this.isCharEditModalOpened = true;
-      this.editChar = id;
     },
     openCreateModal() {
       this.editingGame = null
@@ -231,16 +207,6 @@ export default {
     openGame(game) {
       this.$router.push('/' + game.id)
     },
-    openCharacters(game) {
-      this.selectedGame = game
-      this.selectedGameCharacters = [...game.characters]
-      this.isCharsModalVisible = true
-    },
-    onSaveCharacters(newChars) {
-      this.selectedGame.characters = newChars
-      this.isCharsModalVisible = false
-      saveState()
-    },
     closeSettings() {
       this.showSettings = false
     },
@@ -248,33 +214,10 @@ export default {
       state.games = state.games.filter((g) => g.id !== game.id)
       saveState()
     },
-    save() {
-      let ch = this.$refs.createChar;
-      if(this.$refs.createChar.validate()) {
-        let res = {
-          "id": Date.now().toString(),
-          "name": ch.name,
-          "profession": ch.job,
-          "talk_style": ch.speechStyle,
-          "type": ch.type,
-          "traits": ch.mood,
-          "look": ch.appearance,
-          "extra": ch.description
-        };
-        if(ch.edit){
-          this.$refs.charsModal.localChars[this.$refs.charsModal.localChars.findIndex(c => c.id == ch.char.id)] = res;
-        }
-        else {
-          this.$refs.charsModal.localChars.push(res);
-        }
-        this.isCharEditModalOpened = false;
-      }
-    },
-
     toggleUserMenu() {
-  this.showUserMenu = !this.showUserMenu;
-},
-async logoutL() {
+      this.showUserMenu = !this.showUserMenu;
+    },
+    async logoutL() {
       const res = await logout(); // Ваша функция logout из api.js
       if (res.success) {
         this.$router.push('/login'); // Используем this.$router

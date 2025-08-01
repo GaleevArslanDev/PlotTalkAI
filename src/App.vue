@@ -1,12 +1,19 @@
 <script>
-import Notifications from '@/components/Notifications.vue'
+import Notifications from '@/components/Notifications.vue';
 import { load, state, saveState } from './store';
+import CreateCharacterModal from '@/components/CreateCharacterModal.vue';
+import CharactersModal from '@/components/CharacterViewModal.vue';
+import ModalWindow from './components/ModalWindow.vue';
 
 export default {
-  components: { Notifications },
+  components: { CharactersModal, CreateCharacterModal, Notifications, ModalWindow },
   data() {
     return {
-      isLoading: true
+      isLoading: true,
+      isCharsModalVisible: false,
+      isCharEditModalOpened: false,
+      editChar: "",
+      selectedGame: null,
     }
   },
   watch: {
@@ -24,7 +31,47 @@ export default {
       else if (to.path !== "/login" && to.path !== "/register" && !isAuth) {
         this.$router.push("/login");
       }
-    }
+    },   
+    addChar() {
+      this.isCharEditModalOpened = true;
+      this.editChar = "";
+    },
+    editCharF(id) {
+      this.isCharEditModalOpened = true;
+      this.editChar = id;
+    },
+    openCharacters(game) {
+      this.selectedGame = game
+      this.selectedGameCharacters = [...game.characters]
+      this.isCharsModalVisible = true
+    },
+    onSaveCharacters(newChars) {
+      this.selectedGame.characters = newChars
+      this.isCharsModalVisible = false
+      saveState()
+    },
+    save() {
+      let ch = this.$refs.createChar;
+      if(this.$refs.createChar.validate()) {
+        let res = {
+          "id": Date.now().toString(),
+          "name": ch.name,
+          "profession": ch.job,
+          "talk_style": ch.speechStyle,
+          "type": ch.type,
+          "traits": ch.mood,
+          "look": ch.appearance,
+          "extra": ch.description
+        };
+        if(ch.edit){
+          this.$refs.charsModal.localChars[this.$refs.charsModal.localChars.findIndex(c => c.id == ch.char.id)] = res;
+        }
+        else {
+          this.$refs.charsModal.localChars.push(res);
+        }
+        this.isCharEditModalOpened = false;
+      }
+    },
   },
   async beforeMount() {
     this.checkAuth(this.$route)
@@ -53,6 +100,17 @@ export default {
   <div id="app">
     <router-view v-if="!isLoading" />
     <Notifications />
+    <CharactersModal
+      :visible="isCharsModalVisible && !isCharEditModalOpened"
+      :characters="selectedGameCharacters"
+      @close="isCharsModalVisible = false"
+      @save="onSaveCharacters"
+      @add="addChar"
+      @edit="editCharF"
+      ref="charsModal"
+    />
+
+    <ModalWindow v-if="isCharEditModalOpened" @closeModal="isCharEditModalOpened = false" :showButtons="true" :header="'Персонаж'" @validate-request="save"><CreateCharacterModal :edit="editChar" :char="selectedGame.characters.find(c => c.id == editChar)" ref="createChar"/></ModalWindow>
     <div v-if="isLoading" class="loading-spinner">
     <svg width="50" height="50" viewBox="0 0 50 50" class="spin">
       <circle cx="25" cy="25" r="20" fill="none" stroke="#7c37a5" stroke-width="4" stroke-dasharray="80 20" />

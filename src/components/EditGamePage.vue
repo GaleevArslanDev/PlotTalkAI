@@ -231,6 +231,9 @@ export default {
         this.setCreateSceneModalState(false)
       }
     },
+    openCharacters(game) {
+      this.$parent.$parent.openCharacters(game)
+    },
   },
   data() {
     return {
@@ -319,7 +322,7 @@ export default {
       @closeModal="setCreateSceneModalState"
       @validate-request="saveScene"
     >
-      <CreateSceneModal ref="sceneChild" :sceneData="sceneToEdit" />
+      <CreateSceneModal ref="sceneChild" :sceneData="sceneToEdit" @editCharacters="openCharacters" />
     </ModalWindow>
 
     <ModalWindow

@@ -28,8 +28,6 @@ export function resetState() {
 const state = reactive({...defaultState})
 
 function saveState() {
-  console.log('save')
-  console.log({ data: toRaw(state) })
   submitData({'data': toRaw(state)}, `users/me/upd/data`, true)
 }
 

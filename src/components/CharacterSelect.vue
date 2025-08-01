@@ -50,7 +50,7 @@ export default {
       v-model="this.character"
       class="input"
     >
-      <option value="">Выбрать персонжа</option>
+      <option value="">Выбрать персонажа</option>
       <option v-for="char of charactersList" :value="char.id">{{ char.name }}</option>
     </select>
     <!--<span style="cursor: pointer" @click="createCharacter">+</span>-->

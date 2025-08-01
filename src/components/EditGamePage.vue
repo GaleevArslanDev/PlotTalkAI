@@ -234,6 +234,9 @@ export default {
     openCharacters(game) {
       this.$parent.$parent.openCharacters(game)
     },
+    updateScreenWidth() {
+      this.isSidebar = window.innerWidth > 749.99;
+    },
   },
   data() {
     return {
@@ -253,7 +256,8 @@ export default {
       scriptEditScene: null,
       sceneToEdit: null,
       regenerate: false,
-      username: ''
+      username: '',
+      isSidebar: false
     }
   },
   mounted() {
@@ -263,6 +267,7 @@ export default {
 
     // Check if game exists
     this.checkGameExists()
+    window.addEventListener('resize', this.updateScreenWidth);
 
     // Watch for route changes
     this.$watch(
@@ -281,13 +286,16 @@ export default {
       this.$router.push('/')
     }
   },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateScreenWidth);
+  },
 }
 </script>
 
 <template>
   <div class="edit-game-page-container" v-if="game">
     <Sidebar
-      v-if="game"
+      v-if="game && isSidebar"
       :scenes="game.scenes"
       @addScene="addScene"
       @addScript="addScript"
@@ -295,14 +303,19 @@ export default {
       @deleteScene="deleteScene"
       @editScript="editScript"
       @deleteScript="deleteScript"
+      @close="isSidebar = false"
     />
     <MainView
       v-if="!(stateLoc.selectedSceneId === null || stateLoc.selectedScriptId === null)"
       ref="graph"
       @createScene="addScene"
       @createScript="addScript"
+      @openSidebar="isSidebar = true"
     />
-    <span v-else class="empty-dialog-placeholder">Здесь появится открытый диалог</span>
+    <div v-else class="empty-dialog-placeholder">
+      <button class="btn" id="show-sidebar" title="Показать меню" @click="isSidebar = true">Показать меню</button>
+      <p>Здесь появится открытый диалог</p>
+    </div>
     <ModalWindow
       v-if="createScriptModalOpened"
       :regen='scriptEdit !== "false"'
@@ -357,6 +370,19 @@ export default {
   font-style: italic;
   font-size: 1.1rem;
   color: #7b6a91;
+  justify-content: center;
+  justify-self: center;
+  width: 100%;
 }
 
+#show-sidebar {
+  display: none;
+}
+
+@media (max-width: 750px) {
+  #show-sidebar {
+    display: block;
+    width: 100%;
+  }
+}
 </style>

@@ -168,6 +168,20 @@ export default {
   height: 100%;
   grid-gap: 20px;
 }
+.create-scene-modal-name {
+  grid-column: span 2;
+  display: flex;
+  align-items: center;
+}
+@media (max-width: 480px) {
+  .create-scene-modal-container {
+    grid-template-columns: auto;
+    grid-template-rows: repeat(3, auto);
+  }
+  .create-scene-modal-name {
+    grid-column: auto;
+  }
+}
 .create-scene-modal-h2 {
   text-align: left;
   font-weight: normal;
@@ -179,11 +193,6 @@ export default {
   width: 100%;
   justify-content: left;
   text-align: left;
-}
-.create-scene-modal-name {
-  grid-column: span 2;
-  display: flex;
-  align-items: center;
 }
 .input-wrapper {
   display: flex;

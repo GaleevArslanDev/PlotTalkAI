@@ -1,6 +1,7 @@
 ﻿<template>
   <div class="scenario-view"
   >
+    <button class="btn" id="show-sidebar" title="Показать меню" @click="showSidebar">Показать меню</button>
     <div class="scenario-name" placeholder="Название диалога">{{scenario.name}}</div>
     <div class="scenario-description" placeholder="Краткое описание диалога">{{ scenario.description }}</div>
 
@@ -31,9 +32,9 @@
 </div>    
 
     <div class="zoom-controls">
-      <button @click="zoomIn">+</button>
-      <button @click="resetZoom">100%</button>
-      <button @click="zoomOut">-</button>
+      <button @click="zoomIn"><b>+</b></button>
+      <button @click="resetZoom"><b>100%</b></button>
+      <button @click="zoomOut"><b>-</b></button>
       <span class="scale-display">{{ Math.round(scale * 100) }}%</span>
     </div>
 
@@ -254,7 +255,7 @@ function playSpeech(text: string) {
 
 const route = useRoute();
 const router = useRouter();
-const emit = defineEmits(['createScene'])
+const emit = defineEmits(['createScene', 'openSidebar'])
 
 const editingNode = ref<GraphNode | null>(null);
 const showEditModal = ref(false);
@@ -826,6 +827,10 @@ function createRootNode(): GraphNode {
   };
 }
 
+function showSidebar(){
+  emit("openSidebar")
+}
+
 onBeforeUnmount(() => {
   window.removeEventListener('resize', centerCanvasToRoot)
 })
@@ -1098,7 +1103,17 @@ defineExpose({
 </script>
 
 <style scoped>
+#show-sidebar {
+  display: none;
+  width: 100%;
+  margin-bottom: calc(0.5rem + 12px);
+}
 
+@media (max-width: 750px) {
+  #show-sidebar {
+    display: block;
+  }
+}
 
 .scenario-view {
   width: 100%;
@@ -1107,6 +1122,8 @@ defineExpose({
   background: #f3e8ff;
   color: #3b0764;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
   user-select: none;
 }
 
@@ -1124,7 +1141,7 @@ defineExpose({
   border: 1px solid #c4b5fd;
   border-radius: 4px;
   color: #3b0764;
-  width: 100%;
+  width: calc(100% - 16px);
 }
 
 .scenario-name {
@@ -1151,12 +1168,13 @@ defineExpose({
 
 .canvas {
   position: relative;
-  height: 600px;
   background: #e9d5ff;
   border: 1px solid #d8b4fe;
   border-radius: 8px;
   overflow: hidden;
   cursor:grab;
+  justify-self: stretch;
+  height: 100%;
 }
 
 .canvas:active {
@@ -1269,19 +1287,21 @@ defineExpose({
 
 .zoom-controls {
   position: absolute;
-  right: 20px;
-  bottom: 20px;
-  z-index: 100;
+  right: 34px;
+  bottom: 34px;
+  z-index: 19;
   display: flex;
   gap: 4px;
   background: rgba(255, 255, 255, 0.8);
   padding: 6px;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
 }
 
 .zoom-controls button {
-  width: 28px;
+  width: fit-content;
+  min-width: 28px;
   height: 28px;
   border: 1px solid #c4b5fd;
   background: #ddd6fe;
@@ -1291,14 +1311,6 @@ defineExpose({
 
 .zoom-controls button:hover {
   background: #c4b5fd;
-}
-
-.scale-display {
-  display: inline-block;
-  min-width: 50px;
-  text-align: center;
-  line-height: 28px;
-  font-size: 0.9em;
 }
 
 .lines circle {
@@ -1346,38 +1358,6 @@ defineExpose({
   user-select: none;
 }
 
-.zoom-controls {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-  z-index: 100;
-  display: flex;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 8px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid #c4b5fd;
-}
-
-.zoom-controls button {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #c4b5fd;
-  background: #ddd6fe;
-  border-radius: 4px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.zoom-controls button:hover {
-  background: #c4b5fd;
-}
-
 .scale-display {
   display: flex;
   align-items: center;
@@ -1385,7 +1365,8 @@ defineExpose({
   min-width: 50px;
   height: 32px;
   text-align: center;
-  font-size: 14px;
+  line-height: 28px;
+  font-size: 0.9em;
   font-weight: 500;
 }
 .edge-dialog {

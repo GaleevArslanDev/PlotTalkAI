@@ -262,6 +262,19 @@ export default {
   height: 100%;
   grid-gap: 10px;
 }
+.create-script-modal-additional {
+  grid-column: span 2;
+  width: 100%;
+}
+@media (max-width: 480px) {
+  .create-script-modal-container {
+    grid-template-columns: auto;
+    grid-template-rows: repeat(7, auto);
+  }
+  .create-script-modal-additional {
+    grid-column: auto;
+  }
+}
 .create-script-modal-h2 {
   text-align: left;
   font-weight: normal;
@@ -281,10 +294,6 @@ export default {
   display: flex;
   align-items: center;
 }
-.create-script-modal-count {
-}
-.create-script-modal-characters {
-}
 .create-script-modal-description {
   display: flex;
   flex-direction: column;
@@ -293,14 +302,6 @@ export default {
 .create-script-modal-description-input {
   height: 100%;
   resize: none;
-}
-.create-script-modal-getting-item {
-}
-.create-script-modal-getting-info {
-}
-.create-script-modal-additional {
-  grid-column: span 2;
-  width: 100%;
 }
 .add-btn {
   cursor: pointer;

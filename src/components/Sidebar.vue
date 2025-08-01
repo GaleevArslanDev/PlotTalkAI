@@ -7,6 +7,7 @@
   </svg>
   <span class="user-name">{{ this.username }}</span>
 </div>
+  <span id="close-sidebar" title="Закрыть меню" @click="close"><svg width="28" height="28" fill="none"><path d="M7 7l14 14M21 7L7 21" stroke="#a352fa" stroke-width="2"/></svg></span>
 
     <button @click="exit" class="btn">Назад</button>
     <button @click="addScene" class="btn">Создать сцену</button>
@@ -35,8 +36,29 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  z-index: 20;
   box-shadow: 2px 0 6px rgba(98, 0, 238, 0.05);
 }
+
+#close-sidebar {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 1vw;
+  width: fit-content;
+  cursor: pointer;
+}
+@media (max-width: 750px) {
+  #sidebar {
+    position: absolute;
+    width: 100%;
+  }
+  #close-sidebar {
+    display: inline;
+  }
+}
+
 .sidebar-user {
   display: flex;
   align-items: center;
@@ -95,6 +117,9 @@ export default {
     editScript(script, scene) {
       this.$emit('editScript', script, scene)
     },
+    close() {
+      this.$emit('close')
+    }
   },
   mounted(){
     let user = JSON.parse(sessionStorage.getItem('user'));

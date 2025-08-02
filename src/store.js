@@ -1,5 +1,5 @@
 ﻿import { reactive, toRaw } from 'vue'
-import { submitData, fetchData } from '../api/api'
+import { putData, fetchData } from '../api/api'
 
 // СТРУКТУРА ДАННЫХ
 const defaultState = {

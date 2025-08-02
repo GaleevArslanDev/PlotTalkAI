@@ -122,7 +122,6 @@ export default {
 <style>
 body {
   overflow: hidden;
-  
   background-color: #f3e8ff;
 }
 
@@ -153,12 +152,6 @@ body {
 .btn:hover {
   background: #e5e1ff;
   transform: scale(1.04);
-}
-.input {
-  border-radius: 10px;
-  border: black 1px solid;
-  height: fit-content;
-  width: 100%;
 }
 .number-input {
   field-sizing: content;
@@ -199,6 +192,7 @@ body {
   padding: 8px;
   box-sizing: border-box;
   color: #30015f; 
+  //resize: none;
 }
 
 .input:focus {

@@ -1,7 +1,9 @@
 ﻿<template>
   <div class="games-dashboard">
+    <button class="btn" id="show-menu-btn" @click="()=>{isHeader = true}">Открыть меню</button>
     <!-- Top bar -->
-    <header class="dashboard-header">
+    <header class="dashboard-header" v-if="isHeader">
+      <span id="close-header" title="Закрыть меню" @click="isHeader = false"><svg width="28" height="28" fill="none"><path d="M7 7l14 14M21 7L7 21" stroke="#a352fa" stroke-width="2"/></svg></span>
       <div class="dashboard-user">
         <svg class="user-avatar-icon" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7c37a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <circle cx="12" cy="8" r="4" />
@@ -128,7 +130,8 @@ export default {
       selectedVoiceName: '',
       selectedGameCharacters: [],
       showUserMenu: false,
-      username: ''
+      username: '',
+      isHeader: false
     }
   },
   computed: {
@@ -150,16 +153,19 @@ export default {
     },
   },
   mounted() {
+    this.updateScreenWidth();
+    window.addEventListener('resize', () => this.updateScreenWidth());
     this.darkTheme = localStorage.getItem('darkTheme') === '1'
     document.body.classList.toggle('dark-theme', this.darkTheme)
     this.language = this.$i18n.locale
     this.selectedVoiceName = localStorage.getItem('voiceName') || ''
     this.updateVoices()
     window.speechSynthesis.addEventListener('voiceschanged', this.updateVoices)
-    let user = JSON.parse(sessionStorage.getItem('user'));
+    let user = JSON.parse(sessionStorage.getItem('user')); 
     this.username = user.name + " " + user.surname;
   },
   beforeUnmount() {
+    //window.removeEventListener('resize', this.updateScreenWidth);
     window.speechSynthesis.removeEventListener('voiceschanged', this.updateVoices)
   },
   methods: {
@@ -223,7 +229,12 @@ export default {
         this.$router.push('/login'); // Используем this.$router
       }
       return res;
-    }
+    },
+    updateScreenWidth() {
+      this.$nextTick(() => {
+        this.isHeader = window.innerWidth > 499.99;
+      });
+    },
   },
 }
 </script>
@@ -494,9 +505,31 @@ export default {
   justify-content: center;
 }
 
+#show-menu-btn {
+  display: none;    
+}
+
+#close-header {
+  display: none;
+  cursor: pointer;
+  margin: 15px;
+}
+
 @media (max-width: 500px) {
+  #show-menu-btn {
+    display: block;
+  }
+  #close-header {
+    display: inline;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
   .dashboard-header {
-    height: 10000000px;
+    height: 100%;
+    max-height: none;
+    overflow: auto;
+    padding: 34px 0;
     position: absolute;
     left: 0;
     top: 0;

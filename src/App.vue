@@ -192,7 +192,7 @@ body {
   padding: 8px;
   box-sizing: border-box;
   color: #30015f; 
-  //resize: none;
+  resize: none;
 }
 
 .input:focus {

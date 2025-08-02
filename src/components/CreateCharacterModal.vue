@@ -3,40 +3,40 @@
         <div class="left-column">
           <div class="row">
             <div class="column">
-              <label>Имя</label>
+              <h2>Имя</h2>
               <input type="text" v-model="name" required class="input" />
         <span class="error-label" v-if="this.errors.name">Это поле обязательно для заполнения</span>
             </div>
             <div class="column">
-              <label>Профессия</label>
+              <h2>Профессия</h2>
               <input type="text" v-model="job" required class="input" />
         <span class="error-label" v-if="this.errors.job">Это поле обязательно для заполнения</span>
             </div>
           </div>
 
           <div>
-            <label>Характеристика</label>
-            <textarea v-model="description" required class="textarea" rows="5"></textarea>
+            <h2>Характеристика</h2>
+            <textarea v-model="description" required class="input" rows="5"></textarea>
         <span class="error-label" v-if="this.errors.description">Это поле обязательно для заполнения</span>
           </div>
         </div>
 
         <div class="right-column">
           <div>
-            <label>Характер</label>
+            <h2>Характер</h2>
             <input type="text" v-model="mood" required class="input" />
         <span class="error-label" v-if="this.errors.mood">Это поле обязательно для заполнения</span>
           </div>
 
           <div>
-            <label>Стиль речи</label>
-            <textarea v-model="speechStyle" required class="textarea" rows="3"></textarea>
+            <h2>Стиль речи</h2>
+            <textarea v-model="speechStyle" required class="input" rows="3"></textarea>
         <span class="error-label" v-if="errors.speechStyle">Это поле обязательно для заполнения</span>
           </div>
 
           <div>
-            <label>Внешний вид</label>
-            <textarea v-model="appearance" required class="textarea" rows="3"></textarea>
+            <h2>Внешний вид</h2>
+            <textarea v-model="appearance" required class="input" rows="3"></textarea>
         <span class="error-label" v-if="this.errors.appearance">Это поле обязательно для заполнения</span>
           </div>
           
@@ -144,17 +144,22 @@ export default {
   flex-direction: column;
 }
 
-.input,
-.textarea,
-select {
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  resize: vertical;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #fff1ff;
+h2 {
+  text-align: left;
+  font-weight: normal;
+  margin-right: 5px;
+  margin-top: 0;
+}
+
+@media (max-width: 500px){
+  .modal-content {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 370px){
+  .row {
+    flex-direction: column;
+  }
 }
 </style>

@@ -236,4 +236,10 @@ export default {
   background: #e5e1ff;
   transform: scale(1.04);
 }
+
+@media (max-width: 500px) {
+  .modal-grid {
+    grid-template-columns: auto;
+  }
+}
 </style>

@@ -71,7 +71,7 @@
           <div class="setting-item">
             <label>
               <span>{{ $t('settings.language') }}</span>
-              <select v-model="language">
+              <select class="input" v-model="language">
                 <option value="ru">Русский</option>
                 <option value="en">English</option>
               </select>
@@ -80,7 +80,7 @@
           <div class="setting-item">
             <label>
               <span>Голос озвучки</span>
-              <select v-model="selectedVoiceName">
+              <select class="input" v-model="selectedVoiceName">
                 <option v-for="v in voices" :key="v.name" :value="v.name">
                   {{ v.name }} ({{ v.lang }})
                 </option>
@@ -492,5 +492,24 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 500px) {
+  .dashboard-header {
+    height: 10000000px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    grid-template-columns: auto;
+    grid-template-rows: repeat(4, 10vh);
+    z-index: 100;
+    background: linear-gradient(120deg, #e6d5ff 0%, #fff7ff 100%);
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .header-actions {
+    justify-content: center;
+  }
 }
 </style>

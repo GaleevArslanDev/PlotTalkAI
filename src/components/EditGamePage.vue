@@ -261,6 +261,7 @@ export default {
     }
   },
   mounted() {
+    this.updateScreenWidth()
     // Find the game
     this.game = state.games.find((g) => g.id === this.$route.params.id)
     state.selectedGameId = this.$route.params.id

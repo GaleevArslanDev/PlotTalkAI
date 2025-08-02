@@ -67,6 +67,26 @@ export const submitData = async (data, endpoint, requiresAuth = false) => {
   }
 }
 
+export const putData = async (data, endpoint, requiresAuth = false) => {
+  try {
+    // Если не требуется авторизация - создаем новый экземпляр без интерсептора
+    const client = requiresAuth
+      ? api
+      : axios.create({
+          baseURL: 'https://plottalkai-backend.onrender.com/api/',
+          headers: { 'Content-Type': 'application/json' },
+        })
+
+    const response = await client.put(endpoint, data, {
+      validateStatus: (status) => status >= 200 && status < 300,
+    })
+
+    return handleResponse(response)
+  } catch (error) {
+    return handleError(error)
+  }
+}
+
 // Функция для получения данных
 export const fetchData = async (endpoint, requiresAuth = false, params = {}) => {
   try {

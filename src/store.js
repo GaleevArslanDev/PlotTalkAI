@@ -28,7 +28,7 @@ export function resetState() {
 const state = reactive({...defaultState})
 
 function saveState() {
-  submitData({'data': toRaw(state)}, `users/me/upd/data`, true)
+  putData({'data': toRaw(state)}, `users/me/upd/data`, true)
 }
 
 function setToken(token) {

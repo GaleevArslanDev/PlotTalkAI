@@ -1,6 +1,7 @@
 ﻿import { reactive, toRaw } from 'vue'
 import { putData, fetchData } from '../api/api'
 
+
 // СТРУКТУРА ДАННЫХ
 const defaultState = {
   games: [],

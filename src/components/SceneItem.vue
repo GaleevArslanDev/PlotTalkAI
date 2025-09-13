@@ -1,6 +1,6 @@
 ﻿<script>
-import ScriptItem from '@/components/ScriptItem.vue'
-import { state } from '@/store'
+import ScriptItem from '@/components/ScriptItem.vue';
+import { state } from '@/store';
 
 export default {
   props: ['scene'],
@@ -10,35 +10,35 @@ export default {
       isMenuVisible: {},
       menuX: 0,
       menuY: 0,
-    }
+    };
   },
   computed: {
     menuStyles() {
       return {
         top: `${this.menuY}px`,
         left: `${this.menuX}px`,
-      }
+      };
     },
   },
   components: { ScriptItem },
   methods: {
     toggle() {
-      this.isOpen = !this.isOpen
+      this.isOpen = !this.isOpen;
     },
     addScript() {
-      this.$emit('addScript', this.scene)
+      this.$emit('addScript', this.scene);
     },
     downloadF(filename, text) {
-      const element = document.createElement('a')
-      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text))
-      element.setAttribute('download', filename)
-      element.style.display = 'none'
-      document.body.appendChild(element)
-      element.click()
-      document.body.removeChild(element)
+      const element = document.createElement('a');
+      element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+      element.setAttribute('download', filename);
+      element.style.display = 'none';
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
     },
     download(id) {
-      const game = state.games.find((g) => g.id == state.selectedGameId)
+      const game = state.games.find((g) => g.id == state.selectedGameId);
       const scene = game.scenes.find((s) => s.id == id);
       const scripts = scene.scripts;
       const res = [];
@@ -49,65 +49,73 @@ export default {
             data: element.result.data,
             npc_name: game.characters.find((c) => c.id == element.npc)?.name || '',
             hero_name: game.characters.find((c) => c.id == element.main_character)?.name || '',
-            scene_name: scene?.name || ''
-          })
+            scene_name: scene?.name || '',
+          });
         }
-      })
+      });
 
-      this.downloadF('scene.json', JSON.stringify(res))
+      this.downloadF('scene.json', JSON.stringify(res));
     },
     editScene() {
-      this.$emit('editScene', this.scene)
+      this.$emit('editScene', this.scene);
     },
     showContextMenu(event, id) {
-      this.menuX = Math.min(event.clientX, window.innerWidth - 200)
-      this.menuY = event.clientY
-      this.isMenuVisible = { [id]: true }
+      this.menuX = Math.min(event.clientX, window.innerWidth - 200);
+      this.menuY = event.clientY;
+      this.isMenuVisible = { [id]: true };
     },
     deleteScene() {
-      this.$emit('deleteScene', this.scene)
+      this.$emit('deleteScene', this.scene);
     },
     deleteScript(script) {
-      this.$emit('deleteScript', script, this.scene)
+      this.$emit('deleteScript', script, this.scene);
     },
     editScript(script) {
-      this.$emit('editScript', script, this.scene)
+      this.$emit('editScript', script, this.scene);
     },
   },
   mounted() {
     window.addEventListener('click', (event) => {
       if (!event.target.closest('.custom-context-menu')) {
-        this.isMenuVisible = {}
+        this.isMenuVisible = {};
       }
-    })
+    });
   },
-}
+};
 </script>
 
 <template>
   <div class="GameItem">
-     <div class="custom-context-menu" v-if="isMenuVisible[scene.id.toString()]" :style="menuStyles">
-        <button class="scene-btn icon-with-anim" @click.stop="editScene" title="Редактировать"><svg viewBox="0 0 24 24" width="24" height="24" stroke="#a352fa" fill="#00000000" stroke-width="1.5px">
-      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-    </svg></button>
-        <button class="scene-btn icon-with-anim" @click.stop="deleteScene" title="Удалить"><svg viewBox="0 0 24 24" width="24" height="24" stroke="#a352fa" fill="#00000000" stroke-width="1.5px">
-      <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-    </svg></button>
-    <button class="scene-btn icon-with-anim" @click.stop="download(scene.id)" title="Скачать"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a352fa" stroke-width="1.7" stroke-linecap="square" stroke-linejoin="arcs"><path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5"></path></svg></button>
+    <div class="custom-context-menu" v-if="isMenuVisible[scene.id.toString()]" :style="menuStyles">
+      <button class="scene-btn icon-with-anim" @click.stop="editScene" title="Редактировать">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="#7b3fe4" fill="none" stroke-width="1.5">
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+        </svg>
+      </button>
+      <button class="scene-btn icon-with-anim" @click.stop="deleteScene" title="Удалить">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="#7b3fe4" fill="none" stroke-width="1.5">
+          <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+        </svg>
+      </button>
+      <button class="scene-btn icon-with-anim" @click.stop="download(scene.id)" title="Скачать">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7b3fe4" stroke-width="1.7" stroke-linecap="square" stroke-linejoin="arcs">
+          <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2v-4M17 9l-5 5-5-5M12 12.8V2.5"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Accordion header -->
     <div class="accordion" @click="toggle" @contextmenu.prevent="showContextMenu($event, scene.id)">
       <span class="accordion-arrow" :class="{ active: isOpen }">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7e22ce" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7b3fe4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </span>
       <span class="scene-title">{{ scene.name }}</span>
       <button class="scene-btn" @click.stop="addScript" title="Добавить диалог" id="scene-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 16 16" stroke="#7e22ce" stroke-width="1.2">
-  <path d="M8 4v8M4 8h8"/>
-</svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 16 16" stroke="#7b3fe4" stroke-width="1.2">
+          <path d="M8 4v8M4 8h8"/>
+        </svg>
       </button>
     </div>
 
@@ -133,7 +141,7 @@ export default {
   box-sizing: border-box;
 }
 
-.game-item {
+.GameItem {
   width: 100%;
   overflow: hidden;
 }
@@ -145,15 +153,25 @@ export default {
   background: #f3e8ff;
   padding: 14px 18px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.3s, color 0.2s;
   border: none;
   letter-spacing: normal;
+  color: #4a2670;
+}
+
+.dark-theme .accordion {
+  background: #2c2a4a;
+  color: #e8e4ff;
 }
 
 .accordion:hover {
-  transition: all ease-in-out 0.2s;
   background: #e9d5ff;
   letter-spacing: 1pt;
+  transition: all ease-in-out 0.2s;
+}
+
+.dark-theme .accordion:hover {
+  background: #3c3a5e;
 }
 
 .accordion-arrow {
@@ -162,16 +180,31 @@ export default {
   transition: transform 0.3s ease;
   margin-right: 8px;
 }
+
 .accordion-arrow.active {
   transform: rotate(180deg);
+}
+
+.accordion-arrow svg {
+  stroke: #7b3fe4;
+  transition: stroke 0.2s;
+}
+
+.dark-theme .accordion-arrow svg {
+  stroke: #9f8cff;
 }
 
 .scene-title {
   flex: 1;
   margin-left: 8px;
   font-weight: 500;
-  color: #444;
+  color: #4a2670;
   word-break: break-word;
+  transition: color 0.2s;
+}
+
+.dark-theme .scene-title {
+  color: #e8e4ff;
 }
 
 .scene-btn {
@@ -179,41 +212,79 @@ export default {
   border: none;
   cursor: pointer;
   margin-left: 10px;
+  transition: transform 0.1s;
 }
 
-#scene-btn {
-  transition: all ease-in-out 0.1s;
+.scene-btn svg {
+  stroke: #7b3fe4;
+  transition: stroke 0.2s;
+}
+
+.dark-theme .scene-btn svg {
+  stroke: #9f8cff;
 }
 
 #scene-btn:hover {
-  transform: scale(1.2, 1.2);
+  transform: scale(1.2);
 }
 
 .custom-context-menu {
   position: fixed;
-  background: white;
-  border: 1px solid #ccc;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  background: #ffffff;
+  border: 1px solid #b392ff;
+  box-shadow: 0 4px 12px rgba(171, 114, 231, 0.3);
   padding: 10px;
   z-index: 100;
   max-width: 200px;
   word-wrap: break-word;
+  border-radius: 6px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme .custom-context-menu {
+  background: #3c3a5e;
+  border-color: #5b4cb8;
+  box-shadow: 0 4px 12px rgba(90, 79, 207, 0.4);
+}
+
+.custom-context-menu .scene-btn {
+  display: block;
+  margin: 4px 0;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.custom-context-menu .scene-btn:hover {
+  background: #e0d7ff;
+}
+
+.dark-theme .custom-context-menu .scene-btn:hover {
+  background: #6f61d0;
 }
 
 .panel {
   width: 100%;
-  background: #f3e8ff; 
+  background: #f3e8ff;
   margin: 0;
   padding: 0;
   overflow: hidden;
+  transition: background 0.2s;
 }
 
+.dark-theme .panel {
+  background: #2c2a4a;
+}
 
 .no-scripts {
   display: block;
   padding: 10px;
   font-style: italic;
-  color: #888;
+  color: #a5a5a5;
+  transition: color 0.2s;
+}
+
+.dark-theme .no-scripts {
+  color: #6b7280; 
 }
 
 /* Smooth expand / collapse */
@@ -222,10 +293,12 @@ export default {
   max-height: 0;
   opacity: 0;
 }
+
 .panel-enter-active,
 .panel-leave-active {
   transition: all 0.3s ease-out;
 }
+
 .panel-enter-to,
 .panel-leave-from {
   max-height: 500px;

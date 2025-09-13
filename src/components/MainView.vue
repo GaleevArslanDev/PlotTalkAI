@@ -1,35 +1,33 @@
 ﻿<template>
-  <div class="scenario-view"
-  >
+  <div class="scenario-view">
     <button class="btn" id="show-sidebar" title="Показать меню" @click="showSidebar">Показать меню</button>
     <div class="scenario-name" placeholder="Название диалога">{{scenario.name}}</div>
     <div class="scenario-description" placeholder="Краткое описание диалога">{{ scenario.description }}</div>
 
-   <div class="button-group">
-    <div class="actions-header-buttons">
-  <button class="btn" @click="undoLastAction" title="Отменить" v-if="!isLoading">
-        <svg fill="#601f7e" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="none">
-  <path d="M9,16 C9.85216986,16 10.2974338,15.0144864 9.78322518,14.3774732 L9.70710678,14.2928932 L7.41602684,12.0006549 C8.6852851,10.797551 10.6983085,10 13,10 C16.918278,10 20,12.3112915 20,15 C20,15.5522847 20.4477153,16 21,16 C21.5522847,16 22,15.5522847 22,15 C22,11.0612915 17.918278,8 13,8 C10.1933072,8 7.65904665,8.99693838 6.00030879,10.5849581 L3.70710678,8.29289322 C3.1045317,7.69031813 2.09281919,8.07233231 2.00598327,8.88636906 L2,9 L2,15 C2,15.5128358 2.38604019,15.9355072 2.88337887,15.9932723 L3,16 L9,16 Z"/>
-</svg>
-      </button>
-
-  <button class="btn" @click="redoLastAction" title="Вперёд" v-if="!isLoading">
-  <svg fill="#601f7e" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" stroke="none" transform="matrix(-1,0,0,1,0,0)">
-  <path d="M9,16 C9.85216986,16 10.2974338,15.0144864 9.78322518,14.3774732 L9.70710678,14.2928932 L7.41602684,12.0006549 C8.6852851,10.797551 10.6983085,10 13,10 C16.918278,10 20,12.3112915 20,15 C20,15.5522847 20.4477153,16 21,16 C21.5522847,16 22,15.5522847 22,15 C22,11.0612915 17.918278,8 13,8 C10.1933072,8 7.65904665,8.99693838 6.00030879,10.5849581 L3.70710678,8.29289322 C3.1045317,7.69031813 2.09281919,8.07233231 2.00598327,8.88636906 L2,9 L2,15 C2,15.5128358 2.38604019,15.9355072 2.88337887,15.9932723 L3,16 L9,16 Z"></path>
-</svg>
-</button>
-</div>
-  <button class="btn" @click="saveScript" v-if="!isLoading">Сохранить</button>
-  <button 
+    <div class="button-group">
+      <div class="actions-header-buttons">
+        <button class="btn" @click="undoLastAction" title="Отменить" v-if="!isLoading">
+          <svg fill="none" stroke="#7b3fe4" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9,16 C9.85216986,16 10.2974338,15.0144864 9.78322518,14.3774732 L9.70710678,14.2928932 L7.41602684,12.0006549 C8.6852851,10.797551 10.6983085,10 13,10 C16.918278,10 20,12.3112915 20,15 C20,15.5522847 20.4477153,16 21,16 C21.5522847,16 22,15.5522847 22,15 C22,11.0612915 17.918278,8 13,8 C10.1933072,8 7.65904665,8.99693838 6.00030879,10.5849581 L3.70710678,8.29289322 C3.1045317,7.69031813 2.09281919,8.07233231 2.00598327,8.88636906 L2,9 L2,15 C2,15.5128358 2.38604019,15.9355072 2.88337887,15.9932723 L3,16 L9,16 Z"/>
+          </svg>
+        </button>
+        <button class="btn" @click="redoLastAction" title="Вперёд" v-if="!isLoading">
+          <svg fill="none" stroke="#7b3fe4" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" transform="matrix(-1,0,0,1,0,0)">
+            <path d="M9,16 C9.85216986,16 10.2974338,15.0144864 9.78322518,14.3774732 L9.70710678,14.2928932 L7.41602684,12.0006549 C8.6852851,10.797551 10.6983085,10 13,10 C16.918278,10 20,12.3112915 20,15 C20,15.5522847 20.4477153,16 21,16 C21.5522847,16 22,15.5522847 22,15 C22,11.0612915 17.918278,8 13,8 C10.1933072,8 7.65904665,8.99693838 6.00030879,10.5849581 L3.70710678,8.29289322 C3.1045317,7.69031813 2.09281919,8.07233231 2.00598327,8.88636906 L2,9 L2,15 C2,15.5128358 2.38604019,15.9355072 2.88337887,15.9932723 L3,16 L9,16 Z"/>
+          </svg>
+        </button>
+      </div>
+      <button class="btn" @click="saveScript" v-if="!isLoading">Сохранить</button>
+      <button 
         class="regenerate-btn btn"
         @click="()=>{reloadGraph();notifications.notify('Graph refreshed')}"
         title="Обновить диалог"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M4 4V8H4.58152M19.9381 11C19.446 7.05369 16.0796 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9M4.58152 9H8M20 20V16H19.4185M19.4185 16C18.2317 18.9318 15.3574 21 12 21C7.92038 21 4.55399 17.9463 4.06189 14M19.4185 16H16" stroke="#601f7e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 4V8H4.58152M19.9381 11C19.446 7.05369 16.0796 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9M4.58152 9H8M20 20V16H19.4185M19.4185 16C18.2317 18.9318 15.3574 21 12 21C7.92038 21 4.55399 17.9463 4.06189 14M19.4185 16H16" stroke="#7b3fe4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </button>
-</div>    
+    </div>    
 
     <div class="zoom-controls">
       <button @click="zoomIn"><b>+</b></button>
@@ -38,8 +36,6 @@
       <span class="scale-display">{{ Math.round(scale * 100) }}%</span>
     </div>
 
-    
-
     <div class="canvas" ref="canvasRef" @mousedown="startPan" @wheel="handleWheel">
       <span v-if="isLoading" class="canvas-is-loading"><i>Диалог еще генерируется<span class="dot-animation"><span>.</span><span>.</span><span>.</span></span></i></span>
       <div v-else class="canvas-content" :style="{ 
@@ -47,129 +43,121 @@
           transformOrigin: '0 0'
         }">
         <svg
-        class="lines"
-        xmlns="http://www.w3.org/2000/svg"
-        :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
-        :width="svgWidth"
-        :height="svgHeight"
-        style="overflow: visible;"
-      >
-  <defs>
-    <marker
-      id="arrow"
-      viewBox="0 0 10 10"
-      refX="8"
-      refY="5"
-      markerWidth="6"
-      markerHeight="6"
-      orient="auto"
-    >
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#a78bfa" />
-    </marker>
-  </defs>
-
-  <line
-    v-for="(l, i) in lines"
-    :key="'line-' + i"
-    :x1="l.x1"
-    :y1="l.y1"
-    :x2="l.x2"
-    :y2="l.y2"
-    stroke="#a78bfa"
-    stroke-width="2"
-    marker-end="url(#arrow)"
-  />
-  
-  <!-- Маркеры для текста -->
-  <g v-for="(l, i) in lines" :key="'marker-' + i">
-    <circle
-  :cx="l.markerX"
-  :cy="l.markerY"
-  r="5"
-  fill="#a78bfa"
-  opacity="0.5"
-  @mouseenter="hoveredLineIndex = i"
-  @mouseleave="hoveredLineIndex = null"
-  @click.stop="editEdge(findNodeByPosition(l.x1, l.y1), findEdgeIndex(l))"
-  style="cursor: pointer;"
-/>
-    
-    
-<g v-if="hoveredLineIndex === i" class="tooltip-group">
-  <rect
-    :x="l.markerX - l.tooltipWidth/2"
-    :y="l.markerY - 30"
-    :width="l.tooltipWidth"
-    height="24"
-    rx="4"
-    fill="white"
-    stroke="#c4b5fd"
-    stroke-width="1"
-  />
-  <text
-    :x="l.markerX"
-    :y="l.markerY - 15"
-    fill="#4b5563"
-    font-size="12"
-    text-anchor="middle"
-    style="pointer-events: none;"
-  >
-    {{ l.tooltipText }}
-  </text>
-</g>
-
-  </g>
-</svg>
+          class="lines"
+          xmlns="http://www.w3.org/2000/svg"
+          :viewBox="`0 0 ${svgWidth} ${svgHeight}`"
+          :width="svgWidth"
+          :height="svgHeight"
+          style="overflow: visible;"
+        >
+          <defs>
+            <marker
+              id="arrow"
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="6"
+              markerHeight="6"
+              orient="auto"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#9f8cff" />
+            </marker>
+          </defs>
+          <line
+            v-for="(l, i) in lines"
+            :key="'line-' + i"
+            :x1="l.x1"
+            :y1="l.y1"
+            :x2="l.x2"
+            :y2="l.y2"
+            stroke="#9f8cff"
+            stroke-width="2"
+            marker-end="url(#arrow)"
+          />
+          <g v-for="(l, i) in lines" :key="'marker-' + i">
+            <circle
+              :cx="l.markerX"
+              :cy="l.markerY"
+              r="5"
+              fill="#9f8cff"
+              opacity="0.5"
+              @mouseenter="hoveredLineIndex = i"
+              @mouseleave="hoveredLineIndex = null"
+              @click.stop="editEdge(findNodeByPosition(l.x1, l.y1), findEdgeIndex(l))"
+              style="cursor: pointer;"
+            />
+            <g v-if="hoveredLineIndex === i" class="tooltip-group">
+              <rect
+                :x="l.markerX - l.tooltipWidth/2"
+                :y="l.markerY - 30"
+                :width="l.tooltipWidth"
+                height="24"
+                rx="4"
+                fill="#fff1ff"
+                stroke="#b392ff"
+                stroke-width="1"
+              />
+              <text
+                :x="l.markerX"
+                :y="l.markerY - 15"
+                fill="#4a2670"
+                font-size="12"
+                text-anchor="middle"
+                style="pointer-events: none;"
+              >
+                {{ l.tooltipText }}
+              </text>
+            </g>
+          </g>
+        </svg>
         <div class="canvas-inner">
           <div
-    v-for="node in flatNodes"
-    :key="node.id"
-    class="node"
-    :class="{ 
-      selected: connectingFrom?.id === node.id,
-      dragging: draggingNode?.id === node.id
-    }"
-    :style="{ 
-      left: node.meta?.x + 'px', 
-      top: node.meta?.y + 'px',
-      cursor: draggingNode?.id === node.id ? 'grabbing' : 'grab'
-    }"
-    @mousedown="(e) => startDrag(e, node)"
-  >
+            v-for="node in flatNodes"
+            :key="node.id"
+            class="node"
+            :class="{ 
+              selected: connectingFrom?.id === node.id,
+              dragging: draggingNode?.id === node.id
+            }"
+            :style="{ 
+              left: node.meta?.x + 'px', 
+              top: node.meta?.y + 'px',
+              cursor: draggingNode?.id === node.id ? 'grabbing' : 'grab'
+            }"
+            @mousedown="(e) => startDrag(e, node)"
+          >
             <div class="node-content">
               <div class="text-container">
                 <div class="text-short">{{ node.line.split(' ').slice(0, 10).join(' ') }}...</div>
                 <div class="text-full">{{ node.line }}</div>
               </div>
               <div class="actions">
-        
-<button @click="() => addChild(node)" class="icon-button">
-  <svg viewBox="0 0 24 24" width="48" height="48" fill="#7e22ce">
-    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
-  </svg>
-</button>
-<button @click="() => editNode(node)" class="icon-button">
-  <svg viewBox="0 0 24 24" width="48" height="48" stroke="#7e22ce" fill="#00000000" stroke-width="1.5px">
-    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-  </svg>
-</button>
-<button @click="() => deleteNode(node)" class="icon-button">
-  <svg viewBox="0 0 24 24" width="48" height="48" stroke="#7e22ce" fill="#00000000" stroke-width="1.5px">
-    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-  </svg>
-</button>
-<button @click="() => connectNode(node)" class="icon-button">
-  <svg viewBox="0 0 24 24" width="48" height="48" fill="#7e22ce">
-    <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
-  </svg>
-</button>
-<button @click="() => playSpeech(node.line)" class="icon-button" title="Прослушать">
-  <svg viewBox="0 0 24 24" width="48" height="48" fill="#7e22ce">
-    <path d="M5 9v6h4l5 5V4l-5 5H5z"/>
-    <path d="M14.5 12c0-1.77-.73-3.37-1.9-4.53l1.06-1.06C15.33 7.6 16 9.71 16 12s-.67 4.4-2.34 5.59l-1.06-1.06A6.996 6.996 0 0 0 14.5 12z"/>
-  </svg>
-</button>
-
+                <button @click="() => addChild(node)" class="icon-button">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="#7b3fe4">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                </button>
+                <button @click="() => editNode(node)" class="icon-button">
+                  <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7b3fe4" fill="none" stroke-width="1.5">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                  </svg>
+                </button>
+                <button @click="() => deleteNode(node)" class="icon-button">
+                  <svg viewBox="0 0 24 24" width="22" height="22" stroke="#7b3fe4" fill="none" stroke-width="1.5">
+                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                  </svg>
+                </button>
+                <button @click="() => connectNode(node)" class="icon-button">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="#7b3fe4">
+                    <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+                  </svg>
+                </button>
+                <button @click="() => playSpeech(node.line)" class="icon-button" title="Прослушать">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="#7b3fe4">
+                    <path d="M5 9v6h4l5 5V4l-5 5H5z"/>
+                    <path d="M14.5 12c0-1.77-.73-3.37-1.9-4.53l1.06-1.06C15.33 7.6 16 9.71 16 12s-.67 4.4-2.34 5.59l-1.06-1.06A6.996 6.996 0 0 0 14.5 12z"/>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -177,7 +165,7 @@
       </div>
     </div>
 
-     <RegenerateModal
+    <RegenerateModal
       ref="regenerate"
       :showModal="showEditModal"
       :initialMainPrompt="editingNode?.line || ''"
@@ -187,22 +175,20 @@
       @regenerate="handleNodeRegenerate(this)"
     />
 
-   <dialog 
-  v-if="showEdgeModal"
-  class="edge-dialog" 
-  open
-  @click.self="closeEdgeModal"
->
-  <h3 class="dialog-title">Редактировать</h3>
-  <textarea v-model="edgeText" class="edge-textarea"></textarea>
-  <div class="dialog-actions">
-    <button @click="closeEdgeModal">Отмена</button>
-    <button @click="deleteEdge" class="delete-button">Удалить</button>
-    <button @click="saveEdgeText">Сохранить</button>
-  </div>
-</dialog>
-
-
+    <dialog 
+      v-if="showEdgeModal"
+      class="edge-dialog" 
+      open
+      @click.self="closeEdgeModal"
+    >
+      <h3 class="dialog-title">Редактировать</h3>
+      <textarea v-model="edgeText" class="edge-textarea"></textarea>
+      <div class="dialog-actions">
+        <button @click="closeEdgeModal">Отмена</button>
+        <button @click="deleteEdge" class="delete-button">Удалить</button>
+        <button @click="saveEdgeText">Сохранить</button>
+      </div>
+    </dialog>
   </div>
 </template>
 
@@ -210,7 +196,6 @@
 import { ref, computed, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { state, saveState, load } from '@/store'
 import notifications from '@/notifications'
-import { mount } from '@vue/test-utils'
 import { useRoute, useRouter } from 'vue-router'
 import RegenerateModal from '@/components/RegenerateModal.vue';
 import { submitData } from '../../api/api'
@@ -312,18 +297,14 @@ const offsetY = ref(0)
 const canvasRef = ref<HTMLDivElement | null>(null)
 
 function findNodeById(id: string | number): GraphNode | undefined {
-  
   return scenario.value.data.find(n => n.id == id);
 }
-
 
 const draggingNode = ref<GraphNode | null>(null);
 const dragStartX = ref(0);
 const dragStartY = ref(0);
 const nodeStartX = ref(0);
 const nodeStartY = ref(0);
-
-
 
 function startDrag(e: MouseEvent, node: GraphNode) {
   e.stopPropagation();
@@ -355,9 +336,8 @@ function endDrag() {
   window.removeEventListener('mouseup', endDrag);
 }
 
-
 function findAvailablePosition(nearX: number, nearY: number): { x: number; y: number } {
-  const gridSize = 80; // Увеличено с 50
+  const gridSize = 80;
   let attempts = 0;
   const maxAttempts = 100;
   
@@ -472,7 +452,6 @@ function layoutTree() {
   });
 }
 
-
 function truncateText(text: string, maxWords: number): { text: string; width: number } {
   const words = text.split(' ');
   let resultText = text;
@@ -534,11 +513,9 @@ function resetZoom() {
   centerCanvasToRoot();
 }
 
-
 function editNode(node: GraphNode) {
   editingNode.value = node;
   showEditModal.value = true;
-  
 }
 
 function handleNodeSubmit({ main, additional }: { main: string; additional: string }) {
@@ -554,21 +531,19 @@ function handleNodeRegenerate(vm) {
   if (editingNode.value) {
     saveHistorySnapshot();
     let regenerateData = {
-      dialog_structure: scenario.data,
-      node_id: editingNode.id,
+      dialog_structure: scenario.value.data,
+      node_id: editingNode.value.id,
       prompt: vm.$refs.regenerate.additionalPrompt
     } 
     scenario.value.data = [];
-    saveScript()
-    reloadGraph()
-    submitData(regenerateData, 'regenerate', true).then((response) =>
-      {
-        if(response.error){
-          throw response.error.data;
-        }
-        scenario.data = response;      
+    saveScript();
+    reloadGraph();
+    submitData(regenerateData, 'regenerate', true).then((response) => {
+      if (response.error) {
+        throw response.error.data;
       }
-    )
+      scenario.value.data = response;      
+    });
   }
 }
 
@@ -597,7 +572,7 @@ function centerCanvasToNode(node: GraphNode) {
   }
   animateCenterTo(node.meta.x || 0, node.meta.y || 0)
 }
-reloadGraph
+
 let panStartX = 0
 let panStartY = 0
 let panning = false
@@ -617,6 +592,7 @@ function onPan(e: MouseEvent) {
   offsetX.value = (e.clientX - panStartX) / scale.value;
   offsetY.value = (e.clientY - panStartY) / scale.value;
 }
+
 function getRectEdgeIntersection(
   cx: number,
   cy: number,
@@ -625,7 +601,6 @@ function getRectEdgeIntersection(
   px: number,
   py: number
 ): { x: number; y: number } {
-
   const dx = px - cx
   const dy = py - cy
 
@@ -659,11 +634,9 @@ async function reloadGraph() {
     if (scene) {
       const script = scene.scripts.find(s => s.id === state.selectedScriptId);
       if (script) {
-        // Объявляем loadedData здесь
         let loadedData: GraphNode[] = [];
 
         if (Array.isArray(script.result?.data)) {
-          // Заполняем данными
           loadedData = script.result.data.map(node => ({
             ...node,
             to: node.to ? node.to.map(edge => ({ 
@@ -680,16 +653,13 @@ async function reloadGraph() {
           data: loadedData
         };
 
-        // Если данных нет - создаем корневой узел
         if (loadedData.length === 0) {
-          isLoading = true;
+          isLoading.value = true;
           return
-        }
-        else{
-          isLoading = false;
+        } else {
+          isLoading.value = false;
         }
 
-        // Используем loadedData здесь
         scenario.value = {
           name: script.name || 'Новый диалог',
           description: script.description || '',
@@ -701,7 +671,6 @@ async function reloadGraph() {
         nextTick(() => {
           layoutTree();
           
-          // Центрируем на весь граф
           let minX = Infinity, maxX = -Infinity;
           let minY = Infinity, maxY = -Infinity;
 
@@ -744,11 +713,10 @@ function deleteEdge() {
   }
 }
 
-
 onMounted(reloadGraph);
 watch(
   () => state.selectedScriptId,
-  (val) => {
+  () => {
     reloadGraph();
   },
   { deep: true }
@@ -757,7 +725,6 @@ watch(
 const history = ref<Scenario[]>([]);
 const redoHistory = ref<Scenario[]>([]);
 const maxHistorySize = 50;
-
 
 function saveHistorySnapshot() {
   const snapshot = JSON.parse(JSON.stringify(scenario.value));
@@ -786,7 +753,6 @@ function redoLastAction() {
   }
 }
 
-
 function undoLastAction() {
   if (history.value.length === 0) {
     notifications.notify("Нет действий для отмены");
@@ -804,8 +770,6 @@ function undoLastAction() {
   }
 }
 
-
-
 function saveScript() {
   state.games
     .find(g => g.id == state.selectedGameId)
@@ -814,6 +778,7 @@ function saveScript() {
   saveState()
   notifications.notify('Script updated')
 }
+
 function createRootNode(): GraphNode {
   return {
     id: 'root',
@@ -839,26 +804,22 @@ const flatNodes = computed(() => {
   const result: GraphNode[] = [];
   const visited = new Set<string | number>();
 
-  // Рекурсивный обход с обработкой всех детей
   function walk(node: GraphNode) {
     if (!node || visited.has(node.id)) return;
     
     visited.add(node.id);
     result.push(node);
     
-    // Обрабатываем все дочерние связи
     node.to.forEach(edge => {
       const child = findNodeById(edge.id);
       if (child) walk(child);
     });
   }
 
-  // Обход начинаем только с корневого узла
   if (currentRoot.value) {
     walk(currentRoot.value);
   }
   
-  // Добавляем несвязанные узлы (если есть)
   scenario.value.data.forEach(node => {
     if (!visited.has(node.id)) {
       result.push(node);
@@ -880,13 +841,10 @@ interface Line {
   tooltipText: string
 }
 
-
-
 const lines = computed(() => {
   const arr: Line[] = [];
   const visited = new Set<string | number>();
   
-
   function walk(node: GraphNode) {
     if (!node || visited.has(node.id)) return;
     visited.add(node.id);
@@ -919,17 +877,17 @@ const lines = computed(() => {
 
         const markerX = start.x + (end.x - start.x) * 0.7;
         const markerY = start.y + (end.y - start.y) * 0.7;
-const { text: truncatedText, width } = truncateText(edge.line || '', 12);
+        const { text: truncatedText, width } = truncateText(edge.line || '', 12);
         arr.push({
           x1: start.x,
-    y1: start.y,
-    x2: end.x,
-    y2: end.y,
-    label: edge.line || '',
-    markerX,
-    markerY,
-    tooltipWidth: width,
-    tooltipText: truncatedText
+          y1: start.y,
+          x2: end.x,
+          y2: end.y,
+          label: edge.line || '',
+          markerX,
+          markerY,
+          tooltipWidth: width,
+          tooltipText: truncatedText
         });
 
         walk(child);
@@ -937,7 +895,6 @@ const { text: truncatedText, width } = truncateText(edge.line || '', 12);
     });
   }
 
-  // Обработка всех узлов
   visited.clear();
   scenario.value.data.forEach(node => {
     if (!visited.has(node.id)) {
@@ -960,7 +917,7 @@ const svgHeight = computed(() => {
 
 function addChild(parentNode: GraphNode) {
   saveHistorySnapshot();
-  const newId = Date.now(); // Генерируем числовой ID
+  const newId = Date.now();
 
   const parentX = parentNode.meta?.x || 0;
   const parentY = parentNode.meta?.y || 0;
@@ -986,29 +943,23 @@ function addChild(parentNode: GraphNode) {
   });
 
   layoutTree();
-  //nextTick(() => centerCanvasToNode(newNode));
 }
 
 function deleteNode(nodeToDelete: GraphNode) {
   saveHistorySnapshot();
-  // 1. Удаляем сам узел из данных
   scenario.value.data = scenario.value.data.filter(
     node => node.id !== nodeToDelete.id
   );
 
-  // 2. Удаляем все ссылки на этот узел из других узлов
   scenario.value.data.forEach(node => {
     node.to = node.to.filter(edge => edge.id !== nodeToDelete.id);
   });
 
-  // 3. Если удалили текущий корень - возвращаемся назад
   if (currentRoot.value?.id === nodeToDelete.id) {
     back();
   }
 
-  // 4. Перестраиваем дерево и центрируем
   layoutTree();
-  //centerCanvasToRoot();
 }
 
 function back() {
@@ -1029,10 +980,8 @@ const connectingFrom = ref<GraphNode | null>(null)
 
 function connectNode(targetNode: GraphNode) {
   if (!connectingFrom.value) {
-  
     connectingFrom.value = targetNode;
   } else {
-    
     saveHistorySnapshot();
     const sourceNode = connectingFrom.value;
     
@@ -1047,7 +996,6 @@ function connectNode(targetNode: GraphNode) {
       });
     }
     
-    // Сбрасываем выбор начала связи
     connectingFrom.value = null;
     layoutTree();
   }
@@ -1119,17 +1067,28 @@ defineExpose({
   width: 100%;
   height: 100%;
   padding: 16px;
-  background: #f3e8ff;
-  color: #3b0764;
+  background: linear-gradient(180deg, #f8f0ff 0%, #e0d7ff 100%);
+  color: #4a2670;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   user-select: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dark-theme .scenario-view {
+  background: linear-gradient(180deg, #2c2a4a 0%, #3c3a5e 100%);
+  color: #e8e4ff;
 }
 
 .canvas-is-loading {
   margin-top: 10vh;
   font-size: x-large;
+  color: #7b3fe4;
+}
+
+.dark-theme .canvas-is-loading {
+  color: #e8e4ff;
 }
 
 .scenario-description,
@@ -1137,11 +1096,19 @@ defineExpose({
   font-size: 1rem;
   margin-bottom: 12px;
   padding: 6px 8px;
-  background: #ede9fe;
-  border: 1px solid #c4b5fd;
+  background: #fff1ff; 
+  border: 1px solid #b392ff;
   border-radius: 4px;
-  color: #3b0764;
+  color: #4a2670;
   width: calc(100% - 16px);
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark-theme .scenario-description,
+.dark-theme .scenario-name {
+  background: #3c3a5e;
+  border-color: #5b4cb8;
+  color: #e8e4ff;
 }
 
 .scenario-name {
@@ -1162,19 +1129,30 @@ defineExpose({
 
 .crumb {
   cursor: pointer;
-  color: #9333ea; 
+  color: #9f8cff;
   user-select: none;
+  transition: color 0.2s;
+}
+
+.dark-theme .crumb {
+  color: #8a7cff;
 }
 
 .canvas {
   position: relative;
   background: #e9d5ff;
-  border: 1px solid #d8b4fe;
+  border: 1px solid #b392ff;
   border-radius: 8px;
   overflow: hidden;
-  cursor:grab;
+  cursor: grab;
   justify-self: stretch;
   height: 100%;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.dark-theme .canvas {
+  background: #3c3a5e;
+  border-color: #5b4cb8;
 }
 
 .canvas:active {
@@ -1207,18 +1185,29 @@ defineExpose({
   position: absolute;
   transform: none !important;
   cursor: pointer;
-  position: absolute;
   width: 120px;
   background: #ddd6fe;
-  border: 1px solid #c4b5fd;
+  border: 1px solid #b392ff;
   border-radius: 6px;
   padding: 6px;
-  color: #3b0764;
-  box-shadow: 0 0 6px rgba(124, 58, 237, 0.3);
+  color: #4a2670;
+  box-shadow: 0 0 6px rgba(171, 114, 231, 0.3);
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme .node {
+  background: #4a466e;
+  border-color: #5b4cb8;
+  color: #e8e4ff;
+  box-shadow: 0 0 6px rgba(90, 79, 207, 0.4);
 }
 
 .node.selected {
-  outline: 2px solid #7c3aed;
+  outline: 2px solid #9f8cff;
+}
+
+.dark-theme .node.selected {
+  outline: 2px solid #8a7cff;
 }
 
 .node-content .text {
@@ -1236,14 +1225,24 @@ defineExpose({
   font-size: 0.8em;
   padding: 2px 6px;
   border: none;
-  background: #c4b5fd;
-  color: #3b0764;
+  background: #b392ff;
+  color: #4a2670;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dark-theme .actions button {
+  background: #5b4cb8;
+  color: #e8e4ff;
 }
 
 .actions button:hover {
-  background: #a78bfa;
+  background: #9f8cff;
+}
+
+.dark-theme .actions button:hover {
+  background: #8a7cff;
 }
 
 .text-container {
@@ -1256,15 +1255,21 @@ defineExpose({
   top: 100%;
   left: 0;
   background: #ddd6fe;
-  border: 1px solid #ddd;
+  border: 1px solid #b392ff;
   padding: 8px;
   z-index: 100;
   width: 300px;
-  border: 1px solid #c4b5fd;
   border-radius: 6px;
-  padding: 6px;
-  color: #3b0764;
-  box-shadow: 0 0 6px rgba(124, 58, 237, 0.3);
+  color: #4a2670;
+  box-shadow: 0 0 6px rgba(171, 114, 231, 0.3);
+  transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme .text-full {
+  background: #4a466e;
+  border-color: #5b4cb8;
+  color: #e8e4ff;
+  box-shadow: 0 0 6px rgba(90, 79, 207, 0.4);
 }
 
 .text-container:hover .text-short {
@@ -1277,8 +1282,12 @@ defineExpose({
 
 .node.dragging {
   z-index: 1000;
-  box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 10px rgba(171, 114, 231, 0.5);
   opacity: 0.9;
+}
+
+.dark-theme .node.dragging {
+  box-shadow: 0 0 10px rgba(90, 79, 207, 0.5);
 }
 
 .canvas-content {
@@ -1292,33 +1301,55 @@ defineExpose({
   z-index: 19;
   display: flex;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 241, 255, 0.8);
   padding: 6px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(171, 114, 231, 0.2);
   align-items: center;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme .zoom-controls {
+  background: rgba(60, 58, 94, 0.8);
+  box-shadow: 0 2px 4px rgba(90, 79, 207, 0.3);
 }
 
 .zoom-controls button {
   width: fit-content;
   min-width: 28px;
   height: 28px;
-  border: 1px solid #c4b5fd;
+  border: 1px solid #b392ff;
   background: #ddd6fe;
+  color: #4a2670;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark-theme .zoom-controls button {
+  border-color: #5b4cb8;
+  background: #4a466e;
+  color: #e8e4ff;
 }
 
 .zoom-controls button:hover {
-  background: #c4b5fd;
+  background: #9f8cff;
+}
+
+.dark-theme .zoom-controls button:hover {
+  background: #8a7cff;
 }
 
 .lines circle {
   transition: all 0.2s ease;
   pointer-events: all;
   r: 10;
-   fill: #8b5cf6;
+  fill: #9f8cff; 
   opacity: 0.3;
+}
+
+.dark-theme .lines circle {
+  fill: #8a7cff;
 }
 
 .lines circle:hover {
@@ -1326,36 +1357,39 @@ defineExpose({
   r: 10;
 }
 
-.lines text {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 4px 8px;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  white-space: nowrap;
+.lines line {
+  stroke: #9f8cff;
+}
+
+.dark-theme .lines line {
+  stroke: #8a7cff;
+}
+
+.tooltip-group rect {
+  fill: #fff1ff;
+  stroke: #b392ff;
+  filter: drop-shadow(0 2px 4px rgba(171, 114, 231, 0.2));
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.dark-theme .tooltip-group rect {
+  fill: #3c3a5e; 
+  stroke: #5b4cb8;
+  filter: drop-shadow(0 2px 4px rgba(90, 79, 207, 0.3));
+}
+
+.tooltip-group text {
+  fill: #4a2670;
   font-size: 12px;
-  color: #4b5563;
-  pointer-events: none;
-  user-select: none;
-}
-
-.tooltip-group rect {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.tooltip-group text {
-  dominant-baseline: middle;
-  font-family: Arial, sans-serif;
-}
-
-.tooltip-group rect {
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-}
-
-.tooltip-group text {
   dominant-baseline: middle;
   font-family: Arial, sans-serif;
   pointer-events: none;
   user-select: none;
+  transition: fill 0.2s;
+}
+
+.dark-theme .tooltip-group text {
+  fill: #e8e4ff;
 }
 
 .scale-display {
@@ -1368,26 +1402,45 @@ defineExpose({
   line-height: 28px;
   font-size: 0.9em;
   font-weight: 500;
+  color: #4a2670;
+  transition: color 0.2s;
 }
+
+.dark-theme .scale-display {
+  color: #e8e4ff;
+}
+
 .edge-dialog {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 1000;
-  background: white;
+  background: #f8f0ff;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #c4b5fd;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #b392ff;
+  box-shadow: 0 4px 12px rgba(171, 114, 231, 0.3);
   min-width: 300px;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.dark-theme .edge-dialog {
+  background: #2c2a4a; 
+  border-color: #5b4cb8;
+  box-shadow: 0 4px 12px rgba(90, 79, 207, 0.4);
 }
 
 .dialog-title {
-  color: #3b0764;
+  color: #7b3fe4;
   margin-top: 0;
   margin-bottom: 15px;
   font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.dark-theme .dialog-title {
+  color: #e8e4ff;
 }
 
 .actions-header-buttons {
@@ -1400,9 +1453,18 @@ defineExpose({
   min-height: 100px;
   margin: 10px 0;
   padding: 8px;
-  border: 1px solid #c4b5fd;
+  border: 1px solid #b392ff;
   border-radius: 4px;
   display: block;
+  background: #fff1ff;
+  color: #4a2670;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark-theme .edge-textarea {
+  border-color: #5b4cb8;
+  background: #3c3a5e;
+  color: #e8e4ff;
 }
 
 .dialog-actions {
@@ -1415,17 +1477,75 @@ defineExpose({
   padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 0.9em;
 }
 
 .dialog-actions button:first-child {
-  background: #f3f4f6;
-  border: 1px solid #d1d5db;
+  background: #e0d7ff;
+  border: 1px solid #b392ff;
+  color: #4a2670;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark-theme .dialog-actions button:first-child {
+  background: #4a466e;
+  border-color: #5b4cb8;
+  color: #e8e4ff;
 }
 
 .dialog-actions button:last-child {
-  background: #8b5cf6;
-  color: white;
+  background: linear-gradient(90deg, #b392ff 20%, #d9e4ff 100%);
+  color: #4a2670;
   border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dark-theme .dialog-actions button:last-child {
+  background: linear-gradient(90deg, #5b4cb8 20%, #8a7cff 100%);
+  color: #e8e4ff;
+}
+
+.dialog-actions .delete-button {
+  background: #e57373;
+  color: #fff;
+  border: none;
+  transition: background 0.2s;
+}
+
+.dark-theme .dialog-actions .delete-button {
+  background: #cf6679;
+}
+
+.btn {
+  background: linear-gradient(90deg, #b392ff 20%, #d9e4ff 100%);
+  color: #4a2670;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(171, 114, 231, 0.3);
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.dark-theme .btn {
+  background: linear-gradient(90deg, #5b4cb8 20%, #8a7cff 100%);
+  color: #e8e4ff;
+  box-shadow: 0 4px 16px rgba(90, 79, 207, 0.4);
+}
+
+.btn:hover {
+  background: #e0d7ff;
+  transform: translateY(-2px);
+}
+
+.dark-theme .btn:hover {
+  background: #6f61d0;
 }
 
 .icon-button {
@@ -1440,43 +1560,26 @@ defineExpose({
   align-items: center;
   justify-content: center;
   border-radius: 3px;
-  transition: all 0.2s ease;
-  position: relative;
+  transition: background 0.2s;
 }
 
 .icon-button:hover {
-  background-color: #f3e8ff;
+  background: #e0d7ff;
 }
 
-.icon-button:hover .icon {
-  fill: #6b21a8;
+.dark-theme .icon-button:hover {
+  background: #6f61d0;
 }
 
-.icon-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  transition: background 0.2s;
-  border-radius: 6px;
+.icon-button svg {
+  fill: #7b3fe4;
+  stroke: #7b3fe4;
+  transition: fill 0.2s, stroke 0.2s;
 }
 
-.icon-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 6px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-.icon-btn svg {
-  stroke: #4b5563; 
-  width: 24px;
-  height: 24px;
-}
-.icon-btn:hover svg {
-  stroke: #a78bfa; 
+.dark-theme .icon-button svg {
+  fill: #9f8cff;
+  stroke: #9f8cff;
 }
 
 .button-group {

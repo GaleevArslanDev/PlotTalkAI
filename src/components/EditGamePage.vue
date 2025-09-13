@@ -364,16 +364,59 @@ export default {
   display: flex;
   flex-direction: row;
   height: 97.5vh;
+  background: linear-gradient(180deg, #f8f0ff 0%, #e0d7ff 100%);
+  transition: background 0.2s;
+}
+
+.dark-theme .edit-game-page-container {
+  background: linear-gradient(180deg, #1e1b2e 0%, #2d2a40 100%);
 }
 
 .empty-dialog-placeholder {
   margin: 20px 30px;
   font-style: italic;
   font-size: 1.1rem;
-  color: #7b6a91;
+  color: #7b3fe4;
   justify-content: center;
   justify-self: center;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  transition: color 0.2s;
+}
+
+.dark-theme .empty-dialog-placeholder {
+  color: #e8e4ff;
+}
+
+.btn {
+  background: linear-gradient(90deg, #b392ff 20%, #d9e4ff 100%);
+  color: #4a2670;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(171, 114, 231, 0.3);
+  transition: background 0.2s, transform 0.1s;
+}
+
+.dark-theme .btn {
+  background: linear-gradient(90deg, #5b4cb8 20%, #8a7cff 100%);
+  color: #e8e4ff;
+  box-shadow: 0 4px 16px rgba(90, 79, 207, 0.4);
+}
+
+.btn:hover {
+  background: #e0d7ff;
+  transform: translateY(-2px);
+}
+
+.dark-theme .btn:hover {
+  background: #6f61d0;
 }
 
 #show-sidebar {
@@ -384,6 +427,7 @@ export default {
   #show-sidebar {
     display: block;
     width: 100%;
+    max-width: 200px;
   }
 }
 </style>

@@ -2,16 +2,15 @@
   <ModalWindow
     v-if="showModal"
     @closeModal="handleClose"
-    @validate-request="submitPrompt" :showButtons="true"
+    @validate-request="submitPrompt"
+    :showButtons="true"
     :header="'Редактировать'"
     width="800px"
   >
     <div class="prompt-editor">
-      
       <div class="text-field">
-        
-        <textarea 
-          v-model="mainPrompt" 
+        <textarea
+          v-model="mainPrompt"
           placeholder="Введите текст диалога..."
           @input="handleInput"
         ></textarea>
@@ -27,17 +26,22 @@
           placeholder="Дополнительные уточнения..."
           @input="handleInput"
         ></textarea>
-        <button 
+        <button
           class="regenerate-btn"
           @click="regeneratePrompt"
           title="Перегенерировать"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-            <path d="M4 4V8H4.58152M19.9381 11C19.446 7.05369 16.0796 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9M4.58152 9H8M20 20V16H19.4185M19.4185 16C18.2317 18.9318 15.3574 21 12 21C7.92038 21 4.55399 17.9463 4.06189 14M19.4185 16H16" stroke="#6B46C1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path
+              d="M4 4V8H4.58152M19.9381 11C19.446 7.05369 16.0796 4 12 4C8.64262 4 5.76829 6.06817 4.58152 9M4.58152 9H8M20 20V16H19.4185M19.4185 16C18.2317 18.9318 15.3574 21 12 21C7.92038 21 4.55399 17.9463 4.06189 14M19.4185 16H16"
+              stroke="#7b3fe4"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
           </svg>
         </button>
       </div>
-      
     </div>
   </ModalWindow>
 </template>
@@ -66,17 +70,17 @@ export default {
     return {
       mainPrompt: this.initialMainPrompt,
       additionalPrompt: this.initialAdditionalPrompt
-    }
+    };
   },
   methods: {
     handleInput() {
       this.$emit('update', {
         main: this.mainPrompt,
         additional: this.additionalPrompt
-      })
+      });
     },
     regeneratePrompt() {
-      this.$emit('regenerate')
+      this.$emit('regenerate');
     },
     submitPrompt() {
       if (!this.mainPrompt.trim()) {
@@ -100,7 +104,7 @@ export default {
       this.additionalPrompt = newVal;
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -112,14 +116,19 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background: #f8f0ff;
+  color: #4a2670;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
 }
 
-.modal-content {
-  display: flex;
-  gap: 24px;
+.dark-theme .prompt-editor {
+  background: #2c2a4a;
+  color: #e8e4ff;
 }
 
-.text-field, .additional-field {
+.text-field,
+.additional-field {
   margin-bottom: 0;
   position: relative;
   min-width: 0;
@@ -129,21 +138,33 @@ export default {
   display: block;
   margin-bottom: 8px;
   font-weight: 600;
-  color: #6B46C1;
   font-size: 14px;
+  color: #7b3fe4;
+  transition: color 0.2s;
+}
+
+.dark-theme .prompt-label span {
+  color: #e8e4ff;
 }
 
 textarea {
   width: 100%;
   min-height: 120px;
   padding: 12px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #b392ff;
   border-radius: 6px;
   resize: vertical;
   font-size: 14px;
-  transition: border-color 0.2s;
   background-color: #fff1ff;
+  color: #4a2670;
   box-sizing: border-box;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark-theme textarea {
+  border-color: #5b4cb8;
+  background-color: #3c3a5e;
+  color: #e8e4ff;
 }
 
 .additional-field textarea {
@@ -152,8 +173,13 @@ textarea {
 
 textarea:focus {
   outline: none;
-  border-color: #9F7AEA;
-  box-shadow: 0 0 0 1px #9F7AEA;
+  border-color: #9f8cff;
+  box-shadow: 0 0 0 1px #9f8cff;
+}
+
+.dark-theme textarea:focus {
+  border-color: #8a7cff;
+  box-shadow: 0 0 0 1px #8a7cff;
 }
 
 .additional-field {
@@ -165,19 +191,38 @@ textarea:focus {
   width: 40px;
   height: 40px;
   align-self: flex-end;
-  background: #F5F3FF;
-  border: 1px solid #DDD6FE;
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
   border-radius: 6px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.dark-theme .regenerate-btn {
+  background: #4a466e;
+  border-color: #5b4cb8;
 }
 
 .regenerate-btn:hover {
-  background: #EDE9FE;
-  border-color: #C4B5FD;
+  background: #e0d7ff;
+  border-color: #b392ff;
+}
+
+.dark-theme .regenerate-btn:hover {
+  background: #6f61d0;
+  border-color: #8a7cff;
+}
+
+.regenerate-btn svg {
+  stroke: #7b3fe4;
+  transition: stroke 0.2s;
+}
+
+.dark-theme .regenerate-btn svg {
+  stroke: #9f8cff;
 }
 
 .modal-actions {
@@ -186,27 +231,60 @@ textarea:focus {
   gap: 12px;
   margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid #EDE9FE;
+  border-top: 1px solid #ddd6fe;
+  transition: border-color 0.2s;
 }
 
-.cancel-btn, .submit-btn {
+.dark-theme .modal-actions {
+  border-top-color: #5b4cb8;
+}
+
+.cancel-btn,
+.submit-btn {
   padding: 8px 16px;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
 }
 
 .cancel-btn {
-  background: #F5F3FF;
-  border: 1px solid #DDD6FE;
-  color: #6B46C1;
+  background: #f5f3ff;
+  border: 1px solid #ddd6fe;
+  color: #4a2670;
+}
+
+.dark-theme .cancel-btn {
+  background: #4a466e;
+  border-color: #5b4cb8;
+  color: #e8e4ff;
+}
+
+.cancel-btn:hover {
+  background: #e0d7ff;
+}
+
+.dark-theme .cancel-btn:hover {
+  background: #6f61d0;
 }
 
 .submit-btn {
-  background: #6B46C1;
-  border: 1px solid #6B46C1;
-  color: white;
+  background: #7b3fe4;
+  border: 1px solid #7b3fe4;
+  color: #ffffff;
+}
+
+.dark-theme .submit-btn {
+  background: #9f8cff;
+  border-color: #9f8cff;
+}
+
+.submit-btn:hover {
+  background: #9f8cff;
+}
+
+.dark-theme .submit-btn:hover {
+  background: #8a7cff;
 }
 
 .modal-window-container {

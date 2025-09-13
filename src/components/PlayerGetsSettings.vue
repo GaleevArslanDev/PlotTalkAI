@@ -25,11 +25,11 @@ export default {
         if (typeof value === 'string') {
           if (!value.trim()) {
             errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
-            this.errors[field] = true; // Исправлено: this.errors вместо errors
+            this.errors[field] = true;
           }
         } else if (value === null || value === undefined) {
           errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
-          this.errors[field] = true; // Исправлено: this.errors вместо errors
+          this.errors[field] = true;
         }
       }
 
@@ -49,7 +49,7 @@ export default {
       if (!value) {
         this.name = '';
         this.condition = '';
-        this.resetErrors(); // Сбрасываем ошибки при отключении чекбокса
+        this.resetErrors();
       }
     },
     resetErrors() {
@@ -75,7 +75,7 @@ export default {
 
 <template>
   <div class="player-gets-settings">
-    <Checkbox  :id="checkbox" :label="'Персонаж получит '+checkbox" :value="gets" @onChange="checkboxChanged"/>
+    <Checkbox :id="checkbox" :label="'Персонаж получит '+checkbox" :value="gets" @onChange="checkboxChanged"/>
     <div class="player-gets-settings-name-input" :class="{'gray': !this.gets}">
       <span class="player-gets-settings-name-label label">{{ input }}</span>
       <div class="input-wrapper">
@@ -94,32 +94,105 @@ export default {
 </template>
 
 <style scoped>
-  .gray>* {
-    border-color: #a5a5a5;
-    color: #a5a5a5;
-    pointer-events: none;
-  }
-  .player-gets-settings-name-input {
-    margin-top: 12px;
-    width: 100%;
-    display: flex;
-  }
-  .player-gets-settings-condition-input {
-    margin-top: 7px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: left;
-    text-align: left;
-  }
-  .player-gets-settings-condition-label {
-    margin-bottom: 5px;
-  }
-  .player-gets-settings-condition-input-field {
-    width: auto;
-  }
-  .input-wrapper {
-    display: flex;
-    flex-direction: column;
-  }
+.player-gets-settings {
+  background: #f8f0ff;
+  padding: 16px;
+  border-radius: 8px;
+  color: #4a2670;
+  transition: background 0.2s, color 0.2s;
+}
+
+.dark-theme .player-gets-settings {
+  background: #2c2a4a;
+  color: #e8e4ff;
+}
+
+.gray > * {
+  border-color: #a5a5a5;
+  color: #a5a5a5;
+  pointer-events: none;
+}
+
+.dark-theme .gray > * {
+  border-color: #6b7280;
+  color: #6b7280;
+}
+
+.player-gets-settings-name-input {
+  margin-top: 12px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-gets-settings-condition-input {
+  margin-top: 7px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  text-align: left;
+}
+
+.player-gets-settings-condition-label,
+.player-gets-settings-name-label {
+  font-size: 0.9rem;
+  color: #4a2670;
+  transition: color 0.2s;
+}
+
+.dark-theme .player-gets-settings-condition-label,
+.dark-theme .player-gets-settings-name-label {
+  color: #e8e4ff;
+}
+
+.player-gets-settings-condition-label {
+  margin-bottom: 5px;
+}
+
+.player-gets-settings-condition-input-field {
+  width: auto;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input {
+  padding: 8px;
+  border: 1px solid #b392ff;
+  border-radius: 4px;
+  background: #fff1ff;
+  color: #4a2670;
+  font-size: 0.9rem;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.dark-theme .input {
+  border-color: #5b4cb8;
+  background: #3c3a5e;
+  color: #e8e4ff;
+}
+
+.input.error {
+  border-color: #e57373;
+}
+
+.dark-theme .input.error {
+  border-color: #cf6679;
+}
+
+.error-label {
+  color: #e57373;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  transition: color 0.2s;
+}
+
+.dark-theme .error-label {
+  color: #cf6679;
+}
 </style>

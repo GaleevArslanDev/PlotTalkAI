@@ -16,16 +16,9 @@
   </div>
 </template>
 
-<style scoped>
-#scenes {
-  background: #f3e8ff;
-  height: calc(100% - 36px);
-}
-</style>
-
 <script>
-import SceneItem from './SceneItem.vue'
-import Scrollview from '@/components/Scrollview.vue'
+import SceneItem from './SceneItem.vue';
+import Scrollview from '@/components/Scrollview.vue';
 
 export default {
   name: 'Scenes',
@@ -36,20 +29,32 @@ export default {
   },
   methods: {
     addScript(scene) {
-      this.$emit('addScript', scene)
+      this.$emit('addScript', scene);
     },
     editScene(scene) {
-      this.$emit('editScene', scene)
+      this.$emit('editScene', scene);
     },
     deleteScene(scene) {
-      this.$emit('deleteScene', scene)
+      this.$emit('deleteScene', scene);
     },
     deleteScript(script, scene) {
-      this.$emit('deleteScript', script, scene)
+      this.$emit('deleteScript', script, scene);
     },
     editScript(script, scene) {
-      this.$emit('editScript', script, scene)
+      this.$emit('editScript', script, scene);
     },
   },
-}
+};
 </script>
+
+<style scoped>
+#scenes {
+  background: #f3e8ff;
+  height: calc(100% - 36px);
+  transition: background 0.2s;
+}
+
+.dark-theme #scenes {
+  background: #2c2a4a;
+}
+</style>

@@ -1,60 +1,62 @@
 <template>
-  <ModalWindow :header="'Игра'" @validate-request="submit" @closeModal="close" :showButtons="true">
-      <div class="modal-form">
-        <div class="modal-grid">
-          
-          <div>
-            <div class="field-group">
-              <label class="field-label">Название</label>
-              <input v-model="game.name" required class="input" />
-            </div>
-            <div class="field-group">
-              <label class="field-label">Характеристики мира</label>
-              <textarea v-model="game.description" required class="input textarea" />
-            </div>
+  <ModalWindow :header="$t('createGame.title')" @validate-request="submit" @closeModal="close" :showButtons="true">
+    <div class="modal-form">
+      <div class="modal-grid">
+        <div>
+          <div class="field-group">
+            <label class="field-label">{{ $t('createGame.name') }}</label>
+            <input v-model="game.name" required class="input" :class="{ error: errors.name }" />
+            <span class="error-label" v-if="errors.name">{{ $t('createScript.errors.required') }}</span>
           </div>
-          
-          <div>
-            <div class="field-group">
-              <label class="field-label">Жанр</label>
-              <select v-model="game.genre" required class="input">
-                <option disabled value="">Выберите жанр</option>
-                <option>Приключения</option>
-                <option>Фэнтези</option>
-                <option>Детектив</option>
-                <option>Драма</option>
-                <option>Комедия</option>
-                <option>Ужасы</option>
-                <option>Стратегия</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Исторический период</label>
-              <select v-model="game.techLevel" required class="input">
-                <option disabled value="">Выберите уровень</option>
-                <option>Каменный век</option>
-                <option>Средневековье</option>
-                <option>Эпоха Возрождения</option>
-                <option>Индустриальный</option>
-                <option>Современность</option>
-                <option>Будущее</option>
-                <option>Другое</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Тональность</label>
-              <select v-model="game.tonality" class="input">
-                <option>Нейтральная</option>
-                <option>Героическая</option>
-                <option>Трагическая</option>
-                <option>Комическая</option>
-                <option>Сказочная</option>
-              </select>
-            </div>
+          <div class="field-group">
+            <label class="field-label">{{ $t('createGame.description') }}</label>
+            <textarea v-model="game.description" required class="input textarea" :class="{ error: errors.description }" />
+            <span class="error-label" v-if="errors.description">{{ $t('createScript.errors.required') }}</span>
+          </div>
+        </div>
+        <div>
+          <div class="field-group">
+            <label class="field-label">{{ $t('createGame.genre') }}</label>
+            <select v-model="game.genre" required class="input" :class="{ error: errors.genre }">
+              <option disabled value="">{{ $t('createGame.genre') }}</option>
+              <option value="adventures">{{ $t('createGame.genres.adventures') }}</option>
+              <option value="fantasy">{{ $t('createGame.genres.fantasy') }}</option>
+              <option value="detective">{{ $t('createGame.genres.detective') }}</option>
+              <option value="drama">{{ $t('createGame.genres.drama') }}</option>
+              <option value="comedy">{{ $t('createGame.genres.comedy') }}</option>
+              <option value="horror">{{ $t('createGame.genres.horror') }}</option>
+              <option value="strategy">{{ $t('createGame.genres.strategy') }}</option>
+            </select>
+            <span class="error-label" v-if="errors.genre">{{ $t('createScript.errors.required') }}</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">{{ $t('createGame.techLevel') }}</label>
+            <select v-model="game.techLevel" required class="input" :class="{ error: errors.techLevel }">
+              <option disabled value="">{{ $t('createGame.techLevel') }}</option>
+              <option value="stoneAge">{{ $t('createGame.techLevels.stoneAge') }}</option>
+              <option value="medieval">{{ $t('createGame.techLevels.medieval') }}</option>
+              <option value="renaissance">{{ $t('createGame.techLevels.renaissance') }}</option>
+              <option value="industrial">{{ $t('createGame.techLevels.industrial') }}</option>
+              <option value="modern">{{ $t('createGame.techLevels.modern') }}</option>
+              <option value="future">{{ $t('createGame.techLevels.future') }}</option>
+              <option value="other">{{ $t('createGame.techLevels.other') }}</option>
+            </select>
+            <span class="error-label" v-if="errors.techLevel">{{ $t('createScript.errors.required') }}</span>
+          </div>
+          <div class="field-group">
+            <label class="field-label">{{ $t('createGame.tonality') }}</label>
+            <select v-model="game.tonality" class="input">
+              <option value="neutral">{{ $t('createGame.tonalities.neutral') }}</option>
+              <option value="heroic">{{ $t('createGame.tonalities.heroic') }}</option>
+              <option value="tragic">{{ $t('createGame.tonalities.tragic') }}</option>
+              <option value="comic">{{ $t('createGame.tonalities.comic') }}</option>
+              <option value="fairytale">{{ $t('createGame.tonalities.fairytale') }}</option>
+            </select>
           </div>
         </div>
       </div>
-    </ModalWindow>
+    </div>
+  </ModalWindow>
 </template>
 
 <script>
@@ -62,7 +64,7 @@ import ModalWindow from '../ModalWindow.vue';
 
 export default {
   name: 'CreateGameModal',
-  components: {ModalWindow},
+  components: { ModalWindow },
   props: {
     showDelete: { type: Boolean, default: false },
     gameData: { type: Object, default: null },
@@ -74,63 +76,62 @@ export default {
         description: '',
         genre: '',
         techLevel: '',
-        tonality: 'Нейтральная',
+        tonality: 'neutral',
       },
       fieldsToValidate: ['name', 'description', 'genre', 'techLevel'],
       errors: {},
       darkTheme: false,
-    }
+      language: 'ru',
+    };
   },
   watch: {
     gameData: {
       immediate: true,
       handler(val) {
         if (val) {
-          this.game = { ...val }
+          this.game = {
+            ...val,
+            genre: val.genre || '',
+            techLevel: val.techLevel || '',
+            tonality: val.tonality || 'neutral',
+          };
         }
       },
     },
+    language(val) {
+      this.$i18n.locale = val;
+      localStorage.setItem('locale', val);
+    },
   },
-mounted() {
-    // Читаем значение darkTheme из localStorage при монтировании компонента
+  mounted() {
+    // Читаем тёмную тему из localStorage
     this.darkTheme = localStorage.getItem('darkTheme') === '1';
-    // Применяем класс dark-theme к body, если он ещё не применён
     document.body.classList.toggle('dark-theme', this.darkTheme);
-    // Подписываемся на изменения в localStorage (опционально, для реактивности)
+
+    // Читаем язык из localStorage
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+
+    // Подписываемся на изменения в localStorage
     window.addEventListener('storage', this.handleStorageChange);
   },
   beforeUnmount() {
     // Удаляем слушатель событий
     window.removeEventListener('storage', this.handleStorageChange);
   },
-
   methods: {
     validate() {
       this.resetErrors();
       let isValid = true;
-      const fieldLabels = {
-        name: 'Название',
-        description: 'Характеристики мира',
-        genre: 'Жанр',
-        techLevel: 'Исторический период'
-      };
 
       for (const field of this.fieldsToValidate) {
         const value = this.game[field];
-        
-        if (Array.isArray(value)) {
-          if (value.length === 0) {
-            this.errors[field] = true;
-            isValid = false;
-          }
-        } 
-        else if (typeof value === 'string') {
+        if (typeof value === 'string') {
           if (!value.trim()) {
             this.errors[field] = true;
             isValid = false;
           }
-        } 
-        else if (value === null || value === undefined) {
+        } else if (value === null || value === undefined) {
           this.errors[field] = true;
           isValid = false;
         }
@@ -138,34 +139,36 @@ mounted() {
 
       return isValid;
     },
-    
     resetErrors() {
       this.errors = {};
     },
-    
     submit() {
       if (!this.validate()) {
-        return; // Не сохраняем если есть ошибки
+        return;
       }
-      this.$emit('save', { ...this.game })
-      this.close()
+      this.$emit('save', { ...this.game });
+      this.close();
     },
     close() {
-      this.$emit('close')
+      this.$emit('close');
     },
     remove() {
-      this.$emit('delete')
+      this.$emit('delete');
     },
     handleStorageChange(event) {
-      // Реакция на изменение localStorage
       if (event.key === 'darkTheme') {
         this.darkTheme = event.newValue === '1';
         document.body.classList.toggle('dark-theme', this.darkTheme);
       }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
     },
   },
-}
+};
 </script>
+
 <style scoped>
 .icon-btn {
   background: none;
@@ -236,7 +239,7 @@ mounted() {
   font-size: 19px;
   background: #fff1ff;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background 0.2s, color 0.2s;
   color: #35235b;
 }
 
@@ -254,11 +257,63 @@ mounted() {
   border-color: #a594f9;
 }
 
+.input.error {
+  border-color: #e57373;
+}
+
+.dark-theme .input.error {
+  border-color: #cf6679;
+}
+
+.error-label {
+  font-size: 14px;
+  color: #e57373;
+  margin-top: 4px;
+  text-align: left;
+  transition: color 0.2s;
+}
+
+.dark-theme .error-label {
+  color: #cf6679;
+}
+
 .textarea {
   min-height: 110px;
   resize: vertical;
   font-family: inherit;
   line-height: 1.35;
+}
+
+.textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+.textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme .textarea::-webkit-scrollbar-track {
+  background: #3c3a5e;
+}
+
+.textarea::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme .textarea::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.textarea::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.dark-theme .textarea::-webkit-scrollbar-thumb:hover {
+  background: #8a7cff;
 }
 
 .modal-buttons {

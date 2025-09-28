@@ -8,7 +8,7 @@
           class="icon-btn" 
           @click="deleteLast" 
           v-if="localChars.length > 0"
-          title="Удалить последний"
+          :title="$t('charactersModal.deleteLast')"
         >
           <svg viewBox="0 0 24 24" width="28" height="28" stroke="#7b3fe4" fill="#00000000" stroke-width="1.5px">
             <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
@@ -18,7 +18,7 @@
         <button 
           class="icon-btn" 
           @click="close" 
-          title="Закрыть"
+          :title="$t('common.close')"
         >
           <svg width="28" height="28" fill="none">
             <path d="M7 7l14 14M21 7L7 21" stroke="#7b3fe4" stroke-width="2px"/>
@@ -26,7 +26,7 @@
         </button>
       </div>
 
-      <h1 class="modal-title">Персонажи</h1>
+      <h1 class="modal-title">{{ $t('charactersModal.title') }}</h1>
 
       <div class="modal-grid-characters">
         <div
@@ -38,7 +38,7 @@
           <button 
             @click="editCharacter(char.id)" 
             class="icon-btn"
-            title="Изменить"
+            :title="$t('charactersModal.edit')"
           >
             <svg viewBox="0 0 24 24" width="28" height="28" stroke="#7b3fe4" fill="#00000000" stroke-width="1.5px">
               <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
@@ -47,7 +47,7 @@
           <button 
             @click="deleteCharacter(char.id)" 
             class="icon-btn"
-            title="Удалить"
+            :title="$t('charactersModal.delete')"
           >
             <svg viewBox="0 0 24 24" width="28" height="28" stroke="#7b3fe4" fill="#00000000" stroke-width="1.5px">
               <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
@@ -58,10 +58,10 @@
 
       <div class="modal-buttons">
         <button @click="addCharacter" type="button" class="add-btn">
-          Добавить персонажа
+          {{ $t('charactersModal.addCharacter') }}
         </button>
         <button @click="save" type="button" class="save-btn">
-          Сохранить
+          {{ $t('common.save') }}
         </button>
       </div>
     </div>
@@ -78,7 +78,8 @@ export default {
   data() {
     return {
       localChars: [],
-      darkTheme: false, // Добавляем переменную для темной темы
+      darkTheme: false,
+      language: 'ru',
     };
   },
   watch: {
@@ -90,13 +91,13 @@ export default {
     }
   },
   mounted() {
-    // Читаем значение darkTheme из localStorage при монтировании
     this.darkTheme = localStorage.getItem('darkTheme') === '1';
     document.body.classList.toggle('dark-theme', this.darkTheme);
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
     window.addEventListener('storage', this.handleStorageChange);
   },
   beforeUnmount() {
-    // Удаляем слушатель событий
     window.removeEventListener('storage', this.handleStorageChange);
   },
   methods: {
@@ -120,10 +121,13 @@ export default {
       this.$emit('edit', id)
     },
     handleStorageChange(event) {
-      // Реакция на изменение localStorage
       if (event.key === 'darkTheme') {
         this.darkTheme = event.newValue === '1';
         document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
       }
     },
   }
@@ -163,6 +167,38 @@ export default {
 .dark-theme .modal-window {
   background: #2c2a4a;
   box-shadow: 0 12px 48px rgba(90, 79, 207, 0.4);
+}
+
+.modal-window::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-window::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme .modal-window::-webkit-scrollbar-track {
+  background: #3c3a5e;
+}
+
+.modal-window::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme .modal-window::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.modal-window::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.dark-theme .modal-window::-webkit-scrollbar-thumb:hover {
+  background: #8a7cff;
 }
 
 .modal-actions {

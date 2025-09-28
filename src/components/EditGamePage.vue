@@ -31,6 +31,52 @@ export default {
     MainView,
     CreateCharacterModal,
   },
+  data() {
+    return {
+      games: [
+        { id: '1752067787408', title: 'Game 1', scripts: [], characters: [] },
+        { id: 2, title: 'Game 2', scripts: [], characters: [] },
+      ],
+      createScriptModalOpened: false,
+      createSceneModalOpened: false,
+      createScriptGameId: null,
+      scenes: [],
+      game: null,
+      answerLoadingModalOpened: false,
+      createCharacterModalOpened: false,
+      scriptEdit: 'false',
+      scriptToEdit: null,
+      scriptEditScene: null,
+      sceneToEdit: null,
+      regenerate: false,
+      username: '',
+      isSidebar: false,
+      darkTheme: false,
+      language: 'ru',
+    }
+  },
+  mounted() {
+    this.updateScreenWidth()
+    this.game = state.games.find((g) => g.id === this.$route.params.id)
+    state.selectedGameId = this.$route.params.id
+    this.checkGameExists()
+    window.addEventListener('resize', this.updateScreenWidth)
+    this.darkTheme = localStorage.getItem('darkTheme') === '1'
+    document.body.classList.toggle('dark-theme', this.darkTheme)
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru'
+    this.$i18n.locale = this.language
+    window.addEventListener('storage', this.handleStorageChange)
+  },
+  beforeMount() {
+    this.game = state.games.find((g) => g.id === this.$route.params.id)
+    if (!this.game) {
+      this.$router.push('/')
+    }
+  },
+  beforeUnmount() {
+    window.removeEventListener('resize', this.updateScreenWidth)
+    window.removeEventListener('storage', this.handleStorageChange)
+  },
   methods: {
     checkGameExists() {
       if (!this.game) {
@@ -75,9 +121,9 @@ export default {
       this.setCreateScriptModalState(true)
       this.createScriptGameId = state.selectedGameId
       this.createScriptSceneId = scene.id
-      this.scriptEdit = "false";
-      this.scriptToEdit = null;
-      this.scriptEditScene = scene;
+      this.scriptEdit = "false"
+      this.scriptToEdit = null
+      this.scriptEditScene = scene
     },
     addScene() {
       this.sceneToEdit = null
@@ -94,17 +140,17 @@ export default {
     },
     deleteScript(script, scene) {
       const game = state.games[state.games.findIndex((g) => g.id === state.selectedGameId)]
-      const sc = game.scenes[game.scenes.findIndex((s) => s.id === scene.id)];
+      const sc = game.scenes[game.scenes.findIndex((s) => s.id === scene.id)]
       sc.scripts = sc.scripts.filter(s => s.id !== script.id)
-      saveState();
+      saveState()
     },
     editScript(script, scene) {
       this.setCreateScriptModalState(true)
       this.createScriptGameId = state.selectedGameId
       this.createScriptSceneId = scene.id
-      this.scriptEdit = script.id;
-      this.scriptToEdit = script;
-      this.scriptEditScene = scene;
+      this.scriptEdit = script.id
+      this.scriptToEdit = script
+      this.scriptEditScene = scene
     },
     saveScript() {
       if (this.$refs.child.validate()) {
@@ -129,30 +175,28 @@ export default {
           itemData: child.itemData,
           infoData: child.infoData,
           additional: child.additional,
-          result: !this.regenerate?{}:scene.scripts.find(s => s.id == this.scriptToEdit.id).result,
+          result: !this.regenerate ? {} : scene.scripts.find(s => s.id == this.scriptToEdit.id).result,
         }
         this.setCreateScriptModalState(false)
-        if (this.scriptEdit === "false"){
+        if (this.scriptEdit === "false") {
           scene.scripts.push(dialog)
-        }
-        else {
-          scene.scripts[scene.scripts.findIndex(s => s.id == this.scriptToEdit.id)] = dialog;
-          saveState();
-          if (!this.regenerate)
-            return;
+        } else {
+          scene.scripts[scene.scripts.findIndex(s => s.id == this.scriptToEdit.id)] = dialog
+          saveState()
+          if (!this.regenerate) return
         }
 
         let goals = []
         if (dialog.infoData.gets) {
           goals.push({
-            type: 'получение информации',
+            type: this.$t('editGamePage.infoGoal'),
             object: dialog.infoData.name,
             condition: dialog.infoData.condition,
           })
         }
         if (dialog.itemData.gets) {
           goals.push({
-            type: 'получение предмета',
+            type: this.$t('editGamePage.itemGoal'),
             object: dialog.itemData.name,
             condition: dialog.itemData.condition,
           })
@@ -179,28 +223,27 @@ export default {
           scene_id: sceneId.toString(),
           script_id: dialog.id.toString()
         }
-        this.$refs.graph.reloadGraph();
+        this.$refs.graph.reloadGraph()
         submitData(dialogData, "generate", true)
           .then(
-            (response) =>
-              {
-                if(response.error){
-                  throw response.error.data;
-                }
-              },
+            (response) => {
+              if (response.error) {
+                throw response.error.data
+              }
+            },
           )
-          .catch((error) => console.error('Ошибка:', error))
-        state.selectedSceneId = this.createScriptSceneId;
+          .catch((error) => console.error(this.$t('editGamePage.error'), error))
+        state.selectedSceneId = this.createScriptSceneId
         state.selectedScriptId = dialog.id
         this.$nextTick(() => {
-              if (this.$refs.graph) {
-                this.$refs.graph.reloadGraph();
-              }
-            });
+          if (this.$refs.graph) {
+            this.$refs.graph.reloadGraph()
+          }
+        })
       }
       
       saveState()
-      notifications.notify('Script saved')
+      notifications.notify(this.$t('editGamePage.scriptSaved'))
     },
     saveScene() {
       if (this.$refs.sceneChild.validate()) {
@@ -226,7 +269,7 @@ export default {
           })
         }
         saveState()
-        notifications.notify('Scene saved')
+        notifications.notify(this.$t('editGamePage.sceneSaved'))
         this.sceneToEdit = null
         this.setCreateSceneModalState(false)
       }
@@ -235,60 +278,18 @@ export default {
       this.$parent.$parent.openCharacters(game)
     },
     updateScreenWidth() {
-      this.isSidebar = window.innerWidth > 749.99;
+      this.isSidebar = window.innerWidth > 749.99
     },
-  },
-  data() {
-    return {
-      games: [
-        { id: '1752067787408', title: 'Game 1', scripts: [], characters: [] },
-        { id: 2, title: 'Game 2', scripts: [], characters: [] },
-      ],
-      createScriptModalOpened: false,
-      createSceneModalOpened: false,
-      createScriptGameId: null,
-      scenes: [],
-      game: null,
-      answerLoadingModalOpened: false,
-      createCharacterModalOpened: false,
-      scriptEdit: 'false',
-      scriptToEdit: null,
-      scriptEditScene: null,
-      sceneToEdit: null,
-      regenerate: false,
-      username: '',
-      isSidebar: false
-    }
-  },
-  mounted() {
-    this.updateScreenWidth()
-    // Find the game
-    this.game = state.games.find((g) => g.id === this.$route.params.id)
-    state.selectedGameId = this.$route.params.id
-
-    // Check if game exists
-    this.checkGameExists()
-    window.addEventListener('resize', this.updateScreenWidth);
-
-    // Watch for route changes
-    this.$watch(
-      () => this.$route.params.id,
-      (newId) => {
-        this.game = state.games.find((g) => g.id === newId)
-        state.selectedGameId = newId
-        this.checkGameExists()
-      },
-    )
-  },
-  // Alternative using beforeMount
-  beforeMount() {
-    this.game = state.games.find((g) => g.id === this.$route.params.id)
-    if (!this.game) {
-      this.$router.push('/')
-    }
-  },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.updateScreenWidth);
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1'
+        document.body.classList.toggle('dark-theme', this.darkTheme)
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru'
+        this.$i18n.locale = this.language
+      }
+    },
   },
 }
 </script>
@@ -314,13 +315,13 @@ export default {
       @openSidebar="isSidebar = true"
     />
     <div v-else class="empty-dialog-placeholder">
-      <button class="btn" id="show-sidebar" title="Показать меню" @click="isSidebar = true">Показать меню</button>
-      <p>Здесь появится открытый диалог</p>
+      <button class="btn" id="show-sidebar" :title="$t('editGamePage.showSidebar')" @click="isSidebar = true">{{ $t('editGamePage.showSidebar') }}</button>
+      <p>{{ $t('editGamePage.dialogPlaceholder') }}</p>
     </div>
     <ModalWindow
       v-if="createScriptModalOpened"
-      :regen='scriptEdit !== "false"'
-      :header="'Диалог'"
+      :regen="scriptEdit !== 'false'"
+      :header="$t('editGamePage.dialog')"
       :show-buttons="true"
       @closeModal="setCreateScriptModalState"
       @validate-request="saveScript"
@@ -331,7 +332,7 @@ export default {
 
     <ModalWindow
       v-if="createSceneModalOpened"
-      :header="'Сцена'"
+      :header="$t('editGamePage.scene')"
       :show-buttons="true"
       @closeModal="setCreateSceneModalState"
       @validate-request="saveScene"
@@ -341,7 +342,7 @@ export default {
 
     <ModalWindow
       v-if="answerLoadingModalOpened"
-      :header="'Идет загрузка...'"
+      :header="$t('editGamePage.loading')"
       @closeModal="setAnswerLoadingModalState"
       :show-buttons="false"
     >
@@ -349,7 +350,7 @@ export default {
     </ModalWindow>
     <ModalWindow
       v-if="createCharacterModalOpened"
-      :header="'Персонаж'"
+      :header="$t('editGamePage.character')"
       @closeModal="setCreateCharacterModalState"
       :show-buttons="true"
     >

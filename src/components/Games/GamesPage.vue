@@ -81,7 +81,7 @@
           </div>
           <div class="setting-item">
             <label>
-              <span>Голос озвучки</span>
+              <span>{{$t('settings.voice')}}</span>
               <select class="input" v-model="selectedVoiceName">
                 <option v-for="v in voices" :key="v.name" :value="v.name">
                   {{ v.name }} ({{ v.lang }})

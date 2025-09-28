@@ -3,67 +3,79 @@
     <div class="left-column">
       <div class="row">
         <div class="column">
-          <h2>Имя</h2>
+          <h2>{{ $t('characterForm.name') }}</h2>
           <input type="text" v-model="name" required class="input" :class="{ error: errors.name }" />
-          <span class="error-label" v-if="errors.name">Это поле обязательно для заполнения</span>
+          <span class="error-label" v-if="errors.name">{{ $t('characterForm.errors.required') }}</span>
         </div>
         <div class="column">
-          <h2>Профессия</h2>
+          <h2>{{ $t('characterForm.job') }}</h2>
           <input type="text" v-model="job" required class="input" :class="{ error: errors.job }" />
-          <span class="error-label" v-if="errors.job">Это поле обязательно для заполнения</span>
+          <span class="error-label" v-if="errors.job">{{ $t('characterForm.errors.required') }}</span>
         </div>
       </div>
 
       <div>
-        <h2>Характеристика</h2>
+        <h2>{{ $t('characterForm.description') }}</h2>
         <textarea v-model="description" required class="input" rows="5" :class="{ error: errors.description }"></textarea>
-        <span class="error-label" v-if="errors.description">Это поле обязательно для заполнения</span>
+        <span class="error-label" v-if="errors.description">{{ $t('characterForm.errors.required') }}</span>
       </div>
     </div>
 
     <div class="right-column">
       <div>
-        <h2>Характер</h2>
+        <h2>{{ $t('characterForm.mood') }}</h2>
         <input type="text" v-model="mood" required class="input" :class="{ error: errors.mood }" />
-        <span class="error-label" v-if="errors.mood">Это поле обязательно для заполнения</span>
+        <span class="error-label" v-if="errors.mood">{{ $t('characterForm.errors.required') }}</span>
       </div>
 
       <div>
-        <h2>Стиль речи</h2>
+        <h2>{{ $t('characterForm.speechStyle') }}</h2>
         <textarea v-model="speechStyle" required class="input" rows="3" :class="{ error: errors.speechStyle }"></textarea>
-        <span class="error-label" v-if="errors.speechStyle">Это поле обязательно для заполнения</span>
+        <span class="error-label" v-if="errors.speechStyle">{{ $t('characterForm.errors.required') }}</span>
       </div>
 
       <div>
-        <h2>Внешний вид</h2>
+        <h2>{{ $t('characterForm.appearance') }}</h2>
         <textarea v-model="appearance" required class="input" rows="3" :class="{ error: errors.appearance }"></textarea>
-        <span class="error-label" v-if="errors.appearance">Это поле обязательно для заполнения</span>
+        <span class="error-label" v-if="errors.appearance">{{ $t('characterForm.errors.required') }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { onMounted } from 'vue';
 import ModalWindow from './ModalWindow.vue';
-import { state } from '@/store';
 
 export default {
-  name: "CharacterForm",
+  name: 'CharacterForm',
   components: { ModalWindow },
   props: ['edit', 'char'],
   data() {
     return {
-      name: this.char?.name,
-      job: this.char?.profession,
-      description: this.char?.extra,
-      type: "",
-      mood: this.char?.traits,
-      speechStyle: this.char?.talk_style,
-      appearance: this.char?.look,
+      name: this.char?.name || '',
+      job: this.char?.profession || '',
+      description: this.char?.extra || '',
+      type: '',
+      mood: this.char?.traits || '',
+      speechStyle: this.char?.talk_style || '',
+      appearance: this.char?.look || '',
       fieldsToValidate: ['name', 'job', 'description', 'mood', 'speechStyle', 'appearance'],
-      errors: {}
+      errors: {},
+      darkTheme: false,
+      language: 'ru',
     };
+  },
+  mounted() {
+    this.darkTheme = localStorage.getItem('darkTheme') === '1';
+    document.body.classList.toggle('dark-theme', this.darkTheme);
+
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeUnmount() {
+    window.removeEventListener('storage', this.handleStorageChange);
   },
   methods: {
     handleClose() {
@@ -91,7 +103,17 @@ export default {
         this.errors[field] = false;
       }
     },
-  }
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1';
+        document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
+    },
+  },
 };
 </script>
 
@@ -198,13 +220,46 @@ h2 {
 
 .error-label {
   font-size: 14px;
-  color: #e57373; 
+  color: #e57373;
   margin-top: 4px;
   text-align: left;
+  transition: color 0.2s;
 }
 
 .dark-theme .error-label {
-  color: #cf6679; 
+  color: #cf6679;
+}
+
+textarea::-webkit-scrollbar {
+  width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme textarea::-webkit-scrollbar-track {
+  background: #3c3a5e;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme textarea::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.dark-theme textarea::-webkit-scrollbar-thumb:hover {
+  background: #8a7cff;
 }
 
 @media (max-width: 500px) {

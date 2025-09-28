@@ -1,29 +1,29 @@
 <template>
   <div class="stats-page">
     <div class="header-container">
-      <button class="back-button" @click="goBack">← Назад</button>
-      <h1>Статистика</h1>
+      <button class="back-button" @click="goBack">{{ $t('common.back') }}</button>
+      <h1>{{ $t('stats.title') }}</h1>
     </div>
     
     <section class="overall">
-      <h2>Общая информация</h2>
+      <h2>{{ $t('stats.overall') }}</h2>
       <div class="stats-container">
-        <div class="stat-item"><strong>Игр:</strong> {{ totalGames }}</div>
-        <div class="stat-item"><strong>Сцен:</strong> {{ totalScenes }}</div>
-        <div class="stat-item"><strong>Сценариев:</strong> {{ totalScripts }}</div>
-        <div class="stat-item"><strong>Персонажей:</strong> {{ totalCharacters }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.games') }}</strong> {{ totalGames }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.scenes') }}</strong> {{ totalScenes }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.scripts') }}</strong> {{ totalScripts }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.characters') }}</strong> {{ totalCharacters }}</div>
         <div class="stat-item">
-          <strong>Активность пользователей:</strong> {{ logsCount }} событий
+          <strong>{{ $t('stats.userActivity') }}</strong> {{ logsCount }} {{ $t('stats.events') }}
         </div>
       </div>
     </section>
     <section v-for="game in state.games" :key="game.id" class="game-section">
       <h2>{{ game.name }}</h2>
       <div class="stats-container">
-        <div class="stat-item"><strong>Сцен:</strong> {{ game.scenes?.length || 0 }}</div>
-        <div class="stat-item"><strong>Сценариев:</strong> {{ gameScripts(game) }}</div>
-        <div class="stat-item"><strong>Персонажей:</strong> {{ game.characters?.length || 0 }}</div>
-        <div class="stat-item"><strong>Завершено:</strong> {{ getGameProgress(game) }}%</div>
+        <div class="stat-item"><strong>{{ $t('stats.scenes') }}</strong> {{ game.scenes?.length || 0 }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.scripts') }}</strong> {{ gameScripts(game) }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.characters') }}</strong> {{ game.characters?.length || 0 }}</div>
+        <div class="stat-item"><strong>{{ $t('stats.completed') }}</strong> {{ getGameProgress(game) }}%</div>
       </div>
     </section>
   </div>
@@ -35,6 +35,12 @@ import logger from '@/logger';
 
 export default {
   name: 'StatisticsPage',
+  data() {
+    return {
+      darkTheme: false,
+      language: 'ru',
+    };
+  },
   computed: {
     state() {
       return state;
@@ -69,6 +75,16 @@ export default {
       return count;
     },
   },
+  mounted() {
+    this.darkTheme = localStorage.getItem('darkTheme') === '1';
+    document.body.classList.toggle('dark-theme', this.darkTheme);
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeUnmount() {
+    window.removeEventListener('storage', this.handleStorageChange);
+  },
   methods: {
     gameScripts(game) {
       let count = 0;
@@ -84,6 +100,16 @@ export default {
     },
     goBack() {
       this.$router.go(-1);
+    },
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1';
+        document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
     },
   },
 };

@@ -1,7 +1,7 @@
 ﻿<script lang="ts">
-import CharacterItem from '@/components/CharacterItem.vue'
-import Scrollview from '@/components/Scrollview.vue'
-import { state } from './../store'
+import CharacterItem from '@/components/CharacterItem.vue';
+import Scrollview from '@/components/Scrollview.vue';
+import { state } from './../store';
 
 export default {
   name: 'CreateSceneModal',
@@ -20,17 +20,19 @@ export default {
         description: false,
         characters: false,
       },
-    }
+      darkTheme: false,
+      language: 'ru',
+    };
   },
   watch: {
     sceneData: {
       immediate: true,
       handler(val) {
         if (val) {
-          this.name = val.name || ''
-          this.description = val.description || ''
+          this.name = val.name || '';
+          this.description = val.description || '';
           if (val.characters) {
-            this.characters = [...val.characters]
+            this.characters = [...val.characters];
           }
         }
       },
@@ -38,74 +40,94 @@ export default {
   },
   computed: {
     charactersList() {
-      const game = state.games.find((g) => g.id === state.selectedGameId)
-      return game ? game.characters : []
+      const game = state.games.find((g) => g.id === state.selectedGameId);
+      return game ? game.characters : [];
     },
+  },
+  mounted() {
+    this.darkTheme = localStorage.getItem('darkTheme') === '1';
+    document.body.classList.toggle('dark-theme', this.darkTheme);
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeUnmount() {
+    window.removeEventListener('storage', this.handleStorageChange);
   },
   methods: {
     validate() {
-      this.resetErrors()
-      const errors = []
+      this.resetErrors();
+      const errors = [];
 
       const fieldLabels = {
-        name: 'Название',
-        characters: 'Персонажи',
-        description: 'Характеристики сцены',
-      }
+        name: this.$t('createScene.name'),
+        characters: this.$t('createScene.characters'),
+        description: this.$t('createScene.description'),
+      };
 
       for (const field of this.fieldsToValidate) {
-        const value = this[field]
+        const value = this[field];
 
         if (field === 'characters') {
           if (value.length === 0) {
-            errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`)
-            this.errors[field] = true
+            errors.push(`${this.$t('createScene.errors.required')} "${fieldLabels[field]}"`);
+            this.errors[field] = true;
           }
         } else if (typeof value === 'string') {
           if (!value.trim()) {
-            errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`)
-            this.errors[field] = true
+            errors.push(`${this.$t('createScene.errors.required')} "${fieldLabels[field]}"`);
+            this.errors[field] = true;
           }
         } else if (value === null || value === undefined || value === 0) {
-          errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`)
-            this.errors[field] = true
+          errors.push(`${this.$t('createScene.errors.required')} "${fieldLabels[field]}"`);
+          this.errors[field] = true;
         }
       }
-      return !errors.length
+      return !errors.length;
     },
     resetErrors() {
       for (const field in this.errors) {
-        this.errors[field] = false
+        this.errors[field] = false;
       }
     },
     editCharacters() {
       console.log(state.selectedGameId);
-      this.$emit("editCharacters", state.games.find(g => g.id === state.selectedGameId))
-    }
+      this.$emit('editCharacters', state.games.find((g) => g.id === state.selectedGameId));
+    },
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1';
+        document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
+    },
   },
-}
+};
 </script>
 
 <template>
   <div class="create-scene-modal-container">
     <div class="create-scene-modal-cell create-scene-modal-name">
-      <h2 class="create-scene-modal-h2 create-scene-modal-name-text">Название</h2>
+      <h2 class="create-scene-modal-h2 create-scene-modal-name-text">{{ $t('createScene.name') }}</h2>
       <div class="input-wrapper">
         <input class="input" type="text" v-model="name" :class="{ error: errors.name }" />
-        <span class="error-label" v-if="errors.name">Это поле обязательно для заполнения</span>
+        <span class="error-label" v-if="errors.name">{{ $t('createScene.errors.required') }}</span>
       </div>
     </div>
     <div class="create-scene-modal-cell create-scene-modal-description">
-      <h2 class="create-scene-modal-h2">Характеристика сцены</h2>
+      <h2 class="create-scene-modal-h2">{{ $t('createScene.description') }}</h2>
       <textarea
         class="input create-scene-modal-textarea-input"
         v-model="description"
         :class="{ error: errors.description }"
       />
-      <span class="error-label" v-if="errors.description">Это поле обязательно для заполнения</span>
+      <span class="error-label" v-if="errors.description">{{ $t('createScene.errors.required') }}</span>
     </div>
     <div class="create-scene-modal-cell create-scene-modal-characters">
-      <h2 class="create-scene-modal-h2">Персонажи <button class="btn" type="button" @click="editCharacters">Изменить</button></h2>
+      <h2 class="create-scene-modal-h2">{{ $t('createScene.characters') }} <button class="btn" type="button" @click="editCharacters">{{ $t('createScene.editCharacters') }}</button></h2>
       <Scrollview :w="'100%'" :h="'200px'" :class="{ error: errors.characters }">
         <ul class="characters-list">
           <li v-for="char of charactersList" :key="char.id" class="character-checkbox">
@@ -116,7 +138,7 @@ export default {
           </li>
         </ul>
       </Scrollview>
-      <span class="error-label" v-if="errors.characters">Это поле обязательно для заполнения</span>
+      <span class="error-label" v-if="errors.characters">{{ $t('createScene.errors.required') }}</span>
     </div>
   </div>
 </template>

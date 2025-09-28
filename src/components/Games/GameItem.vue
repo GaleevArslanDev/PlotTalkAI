@@ -1,7 +1,7 @@
 ﻿﻿<template>
   <div class="game-item" @click="openGame">
     <div class="game-item-actions">
-      <button class="icon" @click.stop="editGame" title="Редактировать">
+      <button class="icon" @click.stop="editGame" :title="$t('gameItem.edit')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
           <path
             d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
@@ -10,7 +10,7 @@
           />
         </svg>
       </button>
-      <button class="icon" @click.stop="deleteGame" title="Удалить">
+      <button class="icon" @click.stop="deleteGame" :title="$t('gameItem.delete')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
           <path
             d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
@@ -28,10 +28,10 @@
       {{ game.name }}
     </div>
     <div class="game-meta">
-      <span class="game-badge">{{ game.scenes.length }} сцен</span>
-      <span class="game-badge">{{ game.characters.length }} персонажей</span>
+      <span class="game-badge">{{ game.scenes.length }} {{ $t('gameItem.scenes') }}</span>
+      <span class="game-badge">{{ game.characters.length }} {{ $t('gameItem.charactersCount') }}</span>
     </div>
-    <div class="game-item-characters" @click.stop="openCharacters">персонажи</div>
+    <div class="game-item-characters" @click.stop="openCharacters">{{ $t('gameItem.characters') }}</div>
   </div>
 </template>
 
@@ -40,6 +40,28 @@ export default {
   name: 'GameItem',
   props: {
     game: { type: Object, required: true },
+  },
+  data() {
+    return {
+      darkTheme: false,
+      language: 'ru',
+    };
+  },
+  mounted() {
+    // Читаем тёмную тему из localStorage
+    this.darkTheme = localStorage.getItem('darkTheme') === '1';
+    document.body.classList.toggle('dark-theme', this.darkTheme);
+
+    // Читаем язык из localStorage
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+
+    // Подписываемся на изменения в localStorage
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeUnmount() {
+    // Удаляем слушатель событий
+    window.removeEventListener('storage', this.handleStorageChange);
   },
   methods: {
     openGame() {
@@ -53,6 +75,16 @@ export default {
     },
     deleteGame() {
       this.$emit('delete', this.game);
+    },
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1';
+        document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
     },
   },
 };

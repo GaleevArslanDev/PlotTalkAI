@@ -11,11 +11,14 @@ export default {
   data() {
     return {
       darkTheme: false,
+      language: 'ru',
     };
   },
   mounted() {
     this.darkTheme = localStorage.getItem('darkTheme') === '1';
     document.body.classList.toggle('dark-theme', this.darkTheme);
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
     window.addEventListener('storage', this.handleStorageChange);
   },
   beforeUnmount() {
@@ -38,6 +41,10 @@ export default {
         this.darkTheme = event.newValue === '1';
         document.body.classList.toggle('dark-theme', this.darkTheme);
       }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
     },
   },
 };
@@ -47,7 +54,7 @@ export default {
   <div class="modal-window-container">
     <div class="modal-window-background" @click="closeModal"></div>
     <form class="modal-dialog noselect" @submit.prevent="handleSubmit">
-      <button class="modal-dialog-close" v-if="showButtons" @click="closeModal">
+      <button class="modal-dialog-close" v-if="showButtons" @click="closeModal" :title="$t('common.close')">
         <svg width="28" height="28" fill="none">
           <path d="M7 7l14 14M21 7L7 21" stroke="#a352fa" stroke-width="2" />
         </svg>
@@ -59,8 +66,8 @@ export default {
         <slot></slot>
       </div>
       <div class="modal-dialog-footer">
-        <button class="btn save-btn" v-if="showButtons" type="submit">Сохранить</button>
-        <button class="btn save-btn" v-if="showButtons && regen" type="submit">Перегенерировать</button>
+        <button class="btn save-btn" v-if="showButtons" type="submit">{{ $t('common.save') }}</button>
+        <button class="btn save-btn" v-if="showButtons && regen" type="submit">{{ $t('common.regenerate') }}</button>
       </div>
     </form>
   </div>
@@ -132,6 +139,38 @@ export default {
 .modal-dialog-body {
   max-height: 65vh;
   overflow-y: auto;
+}
+
+.modal-dialog-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-dialog-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme .modal-dialog-body::-webkit-scrollbar-track {
+  background: #3c3a5e;
+}
+
+.modal-dialog-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.dark-theme .modal-dialog-body::-webkit-scrollbar-thumb {
+  background: #6b7280;
+}
+
+.modal-dialog-body::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.dark-theme .modal-dialog-body::-webkit-scrollbar-thumb:hover {
+  background: #8a7cff;
 }
 
 .modal-dialog-footer {

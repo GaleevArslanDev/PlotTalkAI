@@ -1,4 +1,4 @@
-﻿<script>
+﻿<script lang="ts">
 import Scrollview from '@/components/Scrollview.vue';
 import CharacterItem from '@/components/CharacterItem.vue';
 import PlayerGetsSettings from '@/components/PlayerGetsSettings.vue';
@@ -21,14 +21,14 @@ export default {
       answers_from_n: this.edit === 'false' ? 1 : this.script?.answers_from_n,
       answers_to_n: this.edit === 'false' ? 1 : this.script?.answers_to_n,
       main_character: this.edit === 'false' ? "" : this.script?.main_character,
-      to_npc_relations: this.edit === 'false' ? 'не знаком' : this.script?.to_npc_relations,
+      to_npc_relations: this.edit === 'false' ? 'not acquainted' : this.script?.to_npc_relations,
       npc: this.edit === 'false' ? "" : this.script?.npc,
-      to_main_character_relations: this.edit === 'false' ? 'не знаком' : this.script?.to_main_character_relations,
+      to_main_character_relations: this.edit === 'false' ? 'not acquainted' : this.script?.to_main_character_relations,
       description: this.edit === 'false' ? '' : this.script?.description,
       itemData: this.edit === 'false' ? {} : this.script?.itemData,
       infoData: this.edit === 'false' ? {} : this.script?.infoData,
       additional: this.edit === 'false' ? '' : this.script?.additional,
-      fieldsToValidate: ['name', 'main_character', 'npc', 'description'],
+      fieldsToValidate: ['name', 'main_character', 'npc', 'description', 'to_npc_relations', 'to_main_character_relations'],
       errors: {
         name: false,
         answers_count: false,
@@ -37,7 +37,11 @@ export default {
         description: false,
         main_character: false,
         npc: false,
+        to_npc_relations: false,
+        to_main_character_relations: false,
       },
+      darkTheme: false,
+      language: 'ru',
     };
   },
   computed: {
@@ -46,6 +50,16 @@ export default {
       const game = state.games.find((g) => g.id === state.selectedGameId);
       return game ? game.characters.filter((c) => this.scene.characters.includes(c.id)) : [];
     },
+  },
+  mounted() {
+    this.darkTheme = localStorage.getItem('darkTheme') === '1';
+    document.body.classList.toggle('dark-theme', this.darkTheme);
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeUnmount() {
+    window.removeEventListener('storage', this.handleStorageChange);
   },
   methods: {
     validate() {
@@ -61,33 +75,38 @@ export default {
         const errors = [];
 
         const fieldLabels = {
-          name: 'Название',
-          answers_count: 'Количество ответов',
-          branches_count: 'Количество сюжетных веток',
-          characters: 'Персонажи',
-          description: 'Краткое содержание',
+          name: this.$t('createScript.name'),
+          answers_count: this.$t('createScript.answersCount'),
+          branches_count: this.$t('createScript.branchesCount'),
+          characters: this.$t('createScript.characters'),
+          description: this.$t('createScript.description'),
+          main_character: this.$t('createScript.mainCharacter'),
+          npc: this.$t('createScript.npc'),
+          to_npc_relations: this.$t('createScript.relationsToNPC'),
+          to_main_character_relations: this.$t('createScript.relationsToMainCharacter'),
         };
 
         for (const field of this.fieldsToValidate) {
           const value = this[field];
           if (typeof value === 'object') {
             if (Object.keys(value).length === 0) {
-              errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
+              errors.push(`${this.$t('createScript.errors.required')} "${fieldLabels[field]}"`);
               this.errors[field] = true;
             }
           } else if (typeof value === 'string') {
             if (!value.trim()) {
-              errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
+              errors.push(`${this.$t('createScript.errors.required')} "${fieldLabels[field]}"`);
               this.errors[field] = true;
             }
           } else if (value === null || value === undefined || value === 0) {
-            errors.push(`Поле "${fieldLabels[field]}" обязательно для заполнения`);
+            errors.push(`${this.$t('createScript.errors.required')} "${fieldLabels[field]}"`);
             this.errors[field] = true;
           }
         }
 
         return !errors.length;
       }
+      return false;
     },
     resetErrors() {
       for (const field in this.errors) {
@@ -100,6 +119,16 @@ export default {
     mainCharacterEdited() {
       this.main_character = this.$refs.main_char.character;
     },
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1';
+        document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
+    },
   },
 };
 </script>
@@ -107,17 +136,17 @@ export default {
 <template>
   <div class="create-script-modal-container">
     <div class="create-script-modal-cell create-script-modal-name">
-      <h2 class="create-script-modal-h2 create-script-modal-name-text">Название</h2>
+      <h2 class="create-script-modal-h2 create-script-modal-name-text">{{ $t('createScript.name') }}</h2>
       <div class="input-wrapper">
         <input class="input" type="text" v-model="name" :class="{ error: errors.name }" />
-        <span class="error-label" v-if="errors.name">Это поле обязательно для заполнения</span>
+        <span class="error-label" v-if="errors.name">{{ $t('createScript.errors.required') }}</span>
       </div>
     </div>
     <div class="create-script-modal-cell create-script-modal-count">
       <div class="create-script-modal-count-answers">
         <div class="create-script-modal-count-branches">
-          <label class="label" for="create-script-modal-count-answers-input">Ответы главного персонажа:</label>
-          <span class="label">от</span>
+          <label class="label" for="create-script-modal-count-answers-input">{{ $t('createScript.mainCharacterAnswers') }}</label>
+          <span class="label">{{ $t('createScript.from') }}</span>
           <input
             class="input number-input"
             id="create-script-modal-count-answers-input"
@@ -127,7 +156,7 @@ export default {
             max="1000"
             :class="{ error: errors.answers_count }"
           />
-          <span class="label">до</span>
+          <span class="label">{{ $t('createScript.to') }}</span>
           <input
             class="input number-input"
             id="create-script-modal-count-answers-input"
@@ -141,8 +170,8 @@ export default {
       </div>
       <div class="create-script-modal-count-answers">
         <div class="create-script-modal-count-answers">
-          <label class="label" for="create-script-modal-count-answers-input">Глубина дерева диалогов:</label>
-          <span class="label">от</span>
+          <label class="label" for="create-script-modal-count-answers-input">{{ $t('createScript.dialogTreeDepth') }}</label>
+          <span class="label">{{ $t('createScript.from') }}</span>
           <input
             class="input number-input"
             id="create-script-modal-count-answers-input"
@@ -152,7 +181,7 @@ export default {
             max="1000"
             :class="{ error: errors.branches_count }"
           />
-          <span class="label">до</span>
+          <span class="label">{{ $t('createScript.to') }}</span>
           <input
             class="input number-input"
             id="create-script-modal-count-answers-input"
@@ -166,8 +195,8 @@ export default {
       </div>
     </div>
     <div class="create-script-modal-cell create-script-modal-characters">
-      <h2 class="create-script-modal-h2">Персонажи</h2>
-      <p class="label"><b>Главный персонаж</b></p>
+      <h2 class="create-script-modal-h2">{{ $t('createScript.characters') }}</h2>
+      <p class="label"><b>{{ $t('createScript.mainCharacter') }}</b></p>
       <CharacterSelect
         ref="main_char"
         :characters="availableCharacters"
@@ -175,22 +204,22 @@ export default {
         :val="main_character"
         :class="{ error: errors.main_character }"
       />
-      <span class="error-label" v-if="errors.main_character">Это поле обязательно для заполнения</span>
+      <span class="error-label" v-if="errors.main_character">{{ $t('createScript.errors.required') }}</span>
       <div class="create-script-modal-name">
-        <span class="label">Отношение к NPC</span>
+        <span class="label">{{ $t('createScript.relationsToNPC') }}</span>
         <select
           class="input"
           style="float: right; width: max-content; margin-left: 2px"
           v-model="to_npc_relations"
           :class="{ error: errors.to_npc_relations }"
         >
-          <option value="не знаком">Не знаком</option>
-          <option value="хорошо">Хорошо</option>
-          <option value="нейтрально">Нейтрально</option>
-          <option value="плохо">Плохо</option>
+          <option value="not acquainted">{{ $t('createScript.relations.notAcquainted') }}</option>
+          <option value="good">{{ $t('createScript.relations.good') }}</option>
+          <option value="neutral">{{ $t('createScript.relations.neutral') }}</option>
+          <option value="bad">{{ $t('createScript.relations.bad') }}</option>
         </select>
       </div>
-      <p class="label"><b>NPC</b></p>
+      <p class="label"><b>{{ $t('createScript.npc') }}</b></p>
       <CharacterSelect
         ref="npc"
         :characters="availableCharacters"
@@ -198,44 +227,44 @@ export default {
         :val="npc"
         :class="{ error: errors.npc }"
       />
-      <span class="error-label" v-if="errors.npc">Это поле обязательно для заполнения</span>
+      <span class="error-label" v-if="errors.npc">{{ $t('createScript.errors.required') }}</span>
       <div class="create-script-modal-name">
-        <span class="label">Отношение к главному персонажу</span>
+        <span class="label">{{ $t('createScript.relationsToMainCharacter') }}</span>
         <select
           class="input"
           style="float: right; width: max-content; margin-left: 2px"
           v-model="to_main_character_relations"
           :class="{ error: errors.to_main_character_relations }"
         >
-          <option value="не знаком">Не знаком</option>
-          <option value="хорошо">Хорошо</option>
-          <option value="нейтрально">Нейтрально</option>
-          <option value="плохо">Плохо</option>
+          <option value="not acquainted">{{ $t('createScript.relations.notAcquainted') }}</option>
+          <option value="good">{{ $t('createScript.relations.good') }}</option>
+          <option value="neutral">{{ $t('createScript.relations.neutral') }}</option>
+          <option value="bad">{{ $t('createScript.relations.bad') }}</option>
         </select>
       </div>
     </div>
     <div class="create-script-modal-cell create-script-modal-description">
-      <h2 class="create-script-modal-h2">Краткое содержание</h2>
+      <h2 class="create-script-modal-h2">{{ $t('createScript.description') }}</h2>
       <textarea
         class="input create-script-modal-description-input"
         v-model="description"
         :class="{ error: errors.description }"
       />
-      <span class="error-label" v-if="errors.description">Это поле обязательно для заполнения</span>
+      <span class="error-label" v-if="errors.description">{{ $t('createScript.errors.required') }}</span>
     </div>
     <div class="create-script-modal-cell create-script-modal-getting-item">
-      <PlayerGetsSettings :checkbox="'предмет'" :input="'Предмет'" ref="playerGetsSettingsItem" :val="itemData" />
+      <PlayerGetsSettings :checkbox="$t('createScript.item')" :input="$t('createScript.item')" ref="playerGetsSettingsItem" :val="itemData" />
     </div>
     <div class="create-script-modal-cell create-script-modal-getting-info">
       <PlayerGetsSettings
-        :checkbox="'информацию'"
-        :input="'Информация'"
+        :checkbox="$t('createScript.info')"
+        :input="$t('createScript.info')"
         ref="playerGetsSettingsInfo"
         :val="infoData"
       />
     </div>
     <div class="create-script-modal-cell create-script-modal-additional">
-      <h2 class="create-script-modal-h2">Дополнительно</h2>
+      <h2 class="create-script-modal-h2">{{ $t('createScript.additional') }}</h2>
       <textarea class="input create-script-modal-additional-input" v-model="additional" />
     </div>
   </div>

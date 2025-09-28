@@ -7,14 +7,14 @@
       </svg>
       <span class="user-name">{{ this.username }}</span>
     </div>
-    <span id="close-sidebar" title="Закрыть меню" @click="close">
+    <span id="close-sidebar" :title="$t('sidebar.close')" @click="close">
       <svg width="28" height="28" fill="none">
         <path d="M7 7l14 14M21 7L7 21" stroke="#7b3fe4" stroke-width="2"/>
       </svg>
     </span>
 
-    <button @click="exit" class="btn">Назад</button>
-    <button @click="addScene" class="btn">Создать сцену</button>
+    <button @click="exit" class="btn">{{ $t('sidebar.back') }}</button>
+    <button @click="addScene" class="btn">{{ $t('sidebar.createScene') }}</button>
     <Scenes
       @addScript="addScript"
       @editScene="editScene"
@@ -41,6 +41,28 @@ export default {
       return state;
     },
   },
+  data() {
+    return {
+      username: '',
+      darkTheme: false,
+      language: 'ru',
+    };
+  },
+  mounted() {
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    this.username = user.name + ' ' + user.surname;
+    
+    this.darkTheme = localStorage.getItem('darkTheme') === '1';
+    document.body.classList.toggle('dark-theme', this.darkTheme);
+    
+    this.language = localStorage.getItem('locale') || this.$i18n.locale || 'ru';
+    this.$i18n.locale = this.language;
+    
+    window.addEventListener('storage', this.handleStorageChange);
+  },
+  beforeUnmount() {
+    window.removeEventListener('storage', this.handleStorageChange);
+  },
   methods: {
     addScript(scene) {
       this.$emit('addScript', scene);
@@ -66,15 +88,16 @@ export default {
     close() {
       this.$emit('close');
     },
-  },
-  mounted() {
-    let user = JSON.parse(sessionStorage.getItem('user'));
-    this.username = user.name + " " + user.surname;
-  },
-  data() {
-    return {
-      username: "",
-    };
+    handleStorageChange(event) {
+      if (event.key === 'darkTheme') {
+        this.darkTheme = event.newValue === '1';
+        document.body.classList.toggle('dark-theme', this.darkTheme);
+      }
+      if (event.key === 'locale') {
+        this.language = event.newValue || 'ru';
+        this.$i18n.locale = this.language;
+      }
+    },
   },
 };
 </script>
